@@ -113,7 +113,26 @@
   }
 }
 
-/* Responsive design */
+/* Mobile-first responsive design */
+@media (max-width: 640px) {
+  .cv-editor {
+    @apply flex-col;
+  }
+  
+  .cv-preview {
+    @apply w-full max-w-none;
+    min-height: auto;
+  }
+  
+  .form-section {
+    @apply p-4;
+  }
+  
+  .cv-section {
+    @apply p-3;
+  }
+}
+
 @media (max-width: 768px) {
   .cv-editor {
     @apply flex-col;
@@ -121,5 +140,55 @@
   
   .cv-preview {
     @apply w-full;
+  }
+  
+  /* Improve mobile form spacing */
+  .form-section {
+    @apply p-4 space-y-3;
+  }
+  
+  /* Better mobile button sizing */
+  button, .btn {
+    @apply min-h-[44px] px-4;
+  }
+  
+  /* Improve mobile input fields */
+  input, textarea, select {
+    @apply min-h-[44px] text-base;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cv-preview {
+    @apply w-full;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  button, .btn {
+    @apply min-h-[48px] px-5;
+  }
+  
+  input, textarea, select {
+    @apply min-h-[48px] text-base;
+  }
+  
+  .skill-badge {
+    @apply px-3 py-1 text-sm;
+  }
+}
+
+/* High DPI displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .cv-preview {
+    @apply shadow-xl;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .cv-preview {
+    @apply bg-gray-900 text-gray-100;
   }
 }
