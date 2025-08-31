@@ -63,4 +63,6 @@ echo "🔒 Security headers enabled"
 echo "⚡ Performance optimizations enabled"
 echo ""
 
-# Start the server
+# Start the server using npm script
+echo "🚀 Starting server..."
+npm run start:prod
