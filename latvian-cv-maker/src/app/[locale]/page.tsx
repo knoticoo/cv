@@ -2,6 +2,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import { FileText, Layout, Globe, Shield, Zap, Users } from 'lucide-react';
+import PWAInstallPrompt from '@/components/PWAInstallPrompt';
 
 export default function HomePage() {
   const t = useTranslations();
@@ -9,33 +10,33 @@ export default function HomePage() {
   const features = [
     {
       icon: Globe,
-      title: "Daudzvalodu atbalsts",
-      description: "Izveidojiet CV latviešu, krievu un angļu valodās"
+      title: t('homepage.features.multilingual.title'),
+      description: t('homepage.features.multilingual.description')
     },
     {
       icon: Layout,
-      title: "Europass saderība",
-      description: "Profesionālas veidnes, kas atbilst ES standartiem"
+      title: t('homepage.features.europass.title'),
+      description: t('homepage.features.europass.description')
     },
     {
       icon: Shield,
-      title: "Datu drošība",
-      description: "Jūsu personālā informācija ir droši aizsargāta"
+      title: t('homepage.features.security.title'),
+      description: t('homepage.features.security.description')
     },
     {
       icon: Zap,
-      title: "Ātrs un vienkārš",
-      description: "Izveidojiet CV dažās minūtēs ar mūsu intuitīvo redaktoru"
+      title: t('homepage.features.fast.title'),
+      description: t('homepage.features.fast.description')
     },
     {
       icon: Users,
-      title: "Darba devēju iecienīts",
-      description: "Optimizēts Latvijas darba tirgum un ATS sistēmām"
+      title: t('homepage.features.employer.title'),
+      description: t('homepage.features.employer.description')
     },
     {
       icon: FileText,
-      title: "Vairāki formāti",
-      description: "Eksportējiet PDF, Word vai teksta formātā"
+      title: t('homepage.features.formats.title'),
+      description: t('homepage.features.formats.description')
     }
   ];
 
@@ -45,24 +46,23 @@ export default function HomePage() {
       <section className="text-center py-16 bg-gradient-to-br from-primary/5 to-secondary/10 rounded-2xl">
         <div className="max-w-4xl mx-auto px-6">
           <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
-            Profesionāls CV veidotājs
-            <span className="block text-primary">Latvijas tirgum</span>
+            {t('homepage.hero.title')}
+            <span className="block text-primary">{t('homepage.hero.subtitle')}</span>
           </h1>
           <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Izveidojiet izcilu CV dažās minūtēs. Daudzvalodu atbalsts, Europass saderība 
-            un optimizācija Latvijas darba devējiem.
+            {t('homepage.hero.description')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/create">
               <Button size="lg" className="text-lg px-8 py-3">
                 <FileText className="w-5 h-5 mr-2" />
-                Sākt veidot CV
+                {t('homepage.hero.startButton')}
               </Button>
             </Link>
             <Link href="/templates">
               <Button variant="outline" size="lg" className="text-lg px-8 py-3">
                 <Layout className="w-5 h-5 mr-2" />
-                Apskatīt veidnes
+                {t('homepage.hero.templatesButton')}
               </Button>
             </Link>
           </div>
@@ -73,11 +73,10 @@ export default function HomePage() {
       <section className="py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-bold text-foreground mb-4">
-            Kāpēc izvēlēties mūsu CV veidotāju?
+            {t('homepage.features.title')}
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Mēs esam izveidojuši šo rīku speciāli Latvijas darba tirgum, 
-            ņemot vērā vietējos standartus un prasības.
+            {t('homepage.features.subtitle')}
           </p>
         </div>
 
@@ -104,15 +103,14 @@ export default function HomePage() {
       <section className="py-16 bg-primary/5 rounded-2xl text-center">
         <div className="max-w-2xl mx-auto px-6">
           <h2 className="text-3xl font-bold text-foreground mb-4">
-            Gatavs sākt?
+            {t('homepage.cta.title')}
           </h2>
           <p className="text-lg text-muted-foreground mb-8">
-            Pievienojieties tūkstošiem lietotāju, kas jau ir izveidojuši 
-            savus profesionālos CV ar mūsu palīdzību.
+            {t('homepage.cta.description')}
           </p>
           <Link href="/create">
             <Button size="lg" className="text-lg px-8 py-3">
-              Izveidot CV tagad
+              {t('homepage.cta.button')}
             </Button>
           </Link>
         </div>
@@ -121,12 +119,15 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t pt-8 pb-4">
         <div className="text-center text-sm text-muted-foreground">
-          <p>© 2024 Latvian CV Maker. Visi tiesības aizsargātas.</p>
+          <p>{t('homepage.footer.copyright')}</p>
           <p className="mt-2">
-            Izveidots ar ❤️ Latvijas darba meklētājiem
+            {t('homepage.footer.madeWith')}
           </p>
         </div>
       </footer>
+
+      {/* PWA Install Prompt */}
+      <PWAInstallPrompt />
     </div>
   );
 }

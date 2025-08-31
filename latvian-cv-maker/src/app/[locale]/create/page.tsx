@@ -13,7 +13,9 @@ export default function CreateCVPage() {
   
   const [cvData, setCVData] = useState<CVData | null>(null);
   const [showPreview, setShowPreview] = useState(false);
-  const { triggerAutoSave } = useAutoSave(cvData);
+  
+  // Always call the hook, but handle null case inside
+  const { triggerAutoSave } = useAutoSave(cvData || {} as CVData);
 
   // Initialize CV data on mount to avoid SSR/client mismatches
   useEffect(() => {
