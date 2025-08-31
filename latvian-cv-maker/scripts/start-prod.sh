@@ -2,6 +2,7 @@
 
 # 🇱🇻 Latvian CV Maker - Production Start Script
 # This script starts the CV maker in production mode with AI service
+# Enhanced with service killing and cache clearing for instant updates
 
 set -e
 
@@ -35,6 +36,125 @@ print_warning() {
 
 print_error() {
     echo -e "${RED}[ERROR]${NC} $1"
+}
+
+# Function to kill ALL services and processes
+kill_all_services() {
+    print_status "Killing all existing services and processes..."
+    
+    # Kill all tmux sessions related to CV maker
+    local sessions=$(tmux list-sessions -F "#{session_name}" 2>/dev/null | grep -E "(latvian-cv-maker|cv-maker)" || true)
+    if [ -n "$sessions" ]; then
+        print_warning "Killing existing tmux sessions: $sessions"
+        echo "$sessions" | xargs -I {} tmux kill-session -t {} 2>/dev/null || true
+        sleep 2
+    fi
+    
+    # Kill all Node.js processes related to CV maker
+    local node_pids=$(pgrep -f "next.*cv-maker\|node.*cv-maker" 2>/dev/null || true)
+    if [ -n "$node_pids" ]; then
+        print_warning "Killing existing Node.js processes: $node_pids"
+        echo "$node_pids" | xargs -I {} kill -9 {} 2>/dev/null || true
+        sleep 1
+    fi
+    
+    # Kill processes on specific ports
+    local port_pids=$(lsof -ti:$PROD_PORT 2>/dev/null || true)
+    if [ -n "$port_pids" ]; then
+        print_warning "Killing processes on port $PROD_PORT: $port_pids"
+        echo "$port_pids" | xargs -I {} kill -9 {} 2>/dev/null || true
+        sleep 1
+    fi
+    
+    # Kill AI service if running
+    if systemctl is-active --quiet $AI_SERVICE_NAME 2>/dev/null; then
+        print_warning "Stopping AI service: $AI_SERVICE_NAME"
+        systemctl stop $AI_SERVICE_NAME 2>/dev/null || true
+        sleep 2
+    fi
+    
+    # Kill direct ollama processes
+    local ollama_pids=$(pgrep -f "ollama serve" 2>/dev/null || true)
+    if [ -n "$ollama_pids" ]; then
+        print_warning "Killing direct Ollama processes: $ollama_pids"
+        echo "$ollama_pids" | xargs -I {} kill -9 {} 2>/dev/null || true
+        sleep 1
+    fi
+    
+    print_success "All services killed successfully"
+}
+
+# Function to clear all caches for instant updates
+clear_all_caches() {
+    print_status "Clearing all caches for instant updates..."
+    
+    cd "$PROJECT_DIR"
+    
+    # Clear Next.js build cache
+    if [ -d ".next" ]; then
+        print_status "Clearing Next.js build cache..."
+        rm -rf .next
+        print_success "Next.js build cache cleared"
+    fi
+    
+    # Clear node_modules cache
+    if [ -d "node_modules/.cache" ]; then
+        print_status "Clearing node_modules cache..."
+        rm -rf node_modules/.cache
+        print_success "Node modules cache cleared"
+    fi
+    
+    # Clear npm cache
+    print_status "Clearing npm cache..."
+    npm cache clean --force 2>/dev/null || true
+    print_success "NPM cache cleared"
+    
+    # Clear browser caches (if possible)
+    print_status "Attempting to clear browser caches..."
+    
+    # Clear Chrome/Chromium cache
+    if command -v google-chrome >/dev/null 2>&1; then
+        print_status "Clearing Chrome cache..."
+        rm -rf ~/.cache/google-chrome/Default/Cache/* 2>/dev/null || true
+        rm -rf ~/.cache/google-chrome/Default/Code\ Cache/* 2>/dev/null || true
+        print_success "Chrome cache cleared"
+    fi
+    
+    # Clear Firefox cache
+    if command -v firefox >/dev/null 2>&1; then
+        print_status "Clearing Firefox cache..."
+        rm -rf ~/.cache/mozilla/firefox/*/Cache/* 2>/dev/null || true
+        print_success "Firefox cache cleared"
+    fi
+    
+    # Clear system cache
+    print_status "Clearing system cache..."
+    sudo sync && echo 3 | sudo tee /proc/sys/vm/drop_caches >/dev/null 2>&1 || true
+    print_success "System cache cleared"
+    
+    print_success "All caches cleared successfully"
+}
+
+# Function to force rebuild for instant updates
+force_rebuild() {
+    print_status "Forcing complete rebuild for instant updates..."
+    
+    cd "$PROJECT_DIR"
+    
+    # Remove all build artifacts
+    print_status "Removing build artifacts..."
+    rm -rf .next out dist build 2>/dev/null || true
+    
+    # Clean install dependencies
+    print_status "Performing clean install..."
+    rm -rf node_modules package-lock.json 2>/dev/null || true
+    npm install
+    
+    # Build the application
+    print_status "Building application..."
+    npm run build
+    
+    print_success "Application rebuilt successfully"
 }
 
 # Function to check if port is available
@@ -208,8 +328,14 @@ show_status() {
     echo ""
     echo -e "${CYAN}System Management:${NC}"
     echo -e "  🔄 Restart: ./scripts/start-prod.sh"
+    echo -e "  🧹 Clear Cache: ./scripts/start-prod.sh --clear-cache"
+    echo -e "  🔨 Force Rebuild: ./scripts/start-prod.sh --force-rebuild"
     echo -e "  📊 Monitor: htop"
     echo -e "  💾 Memory: free -h"
+    echo ""
+    echo -e "${PURPLE}💡 For instant updates after pull/merge:${NC}"
+    echo -e "  Run: ./scripts/start-prod.sh --clear-cache"
+    echo -e "  Or: ./scripts/start-prod.sh --force-rebuild"
     echo ""
 }
 
@@ -219,6 +345,7 @@ show_help() {
     echo -e "${PURPLE}🇱🇻 Latvian CV Maker - Production Start Script${NC}"
     echo ""
     echo "This script starts the CV maker in production mode with AI service."
+    echo "Enhanced with service killing and cache clearing for instant updates."
     echo ""
     echo -e "${YELLOW}Usage:${NC}"
     echo "  ./scripts/start-prod.sh [OPTIONS]"
@@ -231,17 +358,31 @@ show_help() {
     echo "  -l, --logs          View production logs"
     echo "  --ai-status         Check AI service status"
     echo "  --ai-start          Start AI service"
+    echo "  --clear-cache       Clear all caches for instant updates"
+    echo "  --force-rebuild     Force complete rebuild and restart"
+    echo "  --kill-all          Kill all services before starting"
     echo ""
     echo -e "${YELLOW}Examples:${NC}"
     echo "  ./scripts/start-prod.sh              # Start production on default port"
     echo "  ./scripts/start-prod.sh -p 3005     # Start on port 3005"
     echo "  ./scripts/start-prod.sh --status    # Check production status"
     echo "  ./scripts/start-prod.sh --kill      # Stop production service"
+    echo "  ./scripts/start-prod.sh --clear-cache    # Clear caches for updates"
+    echo "  ./scripts/start-prod.sh --force-rebuild  # Force rebuild and restart"
+    echo ""
+    echo -e "${PURPLE}💡 Pro Tips:${NC}"
+    echo "  • After git pull/merge, use --clear-cache for instant updates"
+    echo "  • Use --force-rebuild for major dependency changes"
+    echo "  • Use --kill-all to ensure clean startup"
     echo ""
 }
 
 # Parse command line arguments
 CUSTOM_PORT=""
+KILL_ALL=false
+CLEAR_CACHE=false
+FORCE_REBUILD=false
+
 while [[ $# -gt 0 ]]; do
     case $1 in
         -p|--port)
@@ -294,6 +435,21 @@ while [[ $# -gt 0 ]]; do
             start_ai_service
             exit 0
             ;;
+        --clear-cache)
+            clear_all_caches
+            exit 0
+            ;;
+        --force-rebuild)
+            kill_all_services
+            clear_all_caches
+            force_rebuild
+            print_success "Force rebuild completed. Run without --force-rebuild to start services."
+            exit 0
+            ;;
+        --kill-all)
+            KILL_ALL=true
+            shift
+            ;;
         *)
             print_error "Unknown option: $1"
             show_help
@@ -307,6 +463,12 @@ main() {
     echo ""
     echo -e "${PURPLE}🇱🇻 Starting Latvian CV Maker in Production Mode...${NC}"
     echo ""
+    
+    # Kill all services if requested
+    if [ "$KILL_ALL" = true ]; then
+        kill_all_services
+        print_success "All services killed successfully"
+    fi
     
     # Find available port
     if [ -n "$CUSTOM_PORT" ]; then
@@ -340,6 +502,7 @@ main() {
         print_status "To view logs, run: tmux attach -t $SESSION_NAME"
         print_status "To stop the service, run: ./scripts/start-prod.sh --kill"
         print_status "To check status, run: ./scripts/start-prod.sh --status"
+        print_status "For instant updates, run: ./scripts/start-prod.sh --clear-cache"
     else
         print_error "Failed to start production service"
         exit 1
