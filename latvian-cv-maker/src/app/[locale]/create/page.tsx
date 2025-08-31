@@ -2,25 +2,49 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { CVData } from '@/types/cv';
 import { generateId } from '@/lib/utils';
 import { storage, useAutoSave } from '@/lib/storage';
 import CVEditor from '@/components/CVEditor';
 import CVPreview from '@/components/CVPreview';
 import AICVAssistant from '@/components/AICVAssistant';
+import AICVCreator from '@/components/AICVCreator';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft, Sparkles } from 'lucide-react';
 
 export default function CreateCVPage() {
   const t = useTranslations('navigation');
+  const router = useRouter();
   
   const [cvData, setCVData] = useState<CVData | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [showAI, setShowAI] = useState(false);
+  const [showAICreator, setShowAICreator] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   
   // Always call the hook, but handle null case inside
   const { triggerAutoSave } = useAutoSave(cvData || {} as CVData);
 
   // Initialize CV data on mount to avoid SSR/client mismatches
   useEffect(() => {
+    // Check if we're editing an existing CV
+    const urlParams = new URLSearchParams(window.location.search);
+    const cvId = urlParams.get('id');
+    
+    if (cvId) {
+      // Load existing CV for editing
+      const existingCV = storage.loadCV(cvId);
+      if (existingCV) {
+        setCVData(existingCV);
+        setIsEditing(true);
+        setLoading(false);
+        return;
+      }
+    }
+    
+    // Load last saved CV or create new one
     const savedCV = storage.loadCV();
     if (savedCV) {
       setCVData(savedCV);
@@ -53,6 +77,7 @@ export default function CreateCVPage() {
         language: 'lv'
       });
     }
+    setLoading(false);
   }, []);
 
   const updateCVData = (updates: Partial<CVData>) => {
@@ -65,6 +90,15 @@ export default function CreateCVPage() {
     };
     setCVData(newData);
     triggerAutoSave();
+  };
+
+  const handleAICVGenerated = (newCVData: CVData) => {
+    setCVData(newCVData);
+    setShowAICreator(false);
+    setShowAI(false);
+    setShowPreview(false);
+    // Save the generated CV
+    storage.saveCV(newCVData);
   };
 
   // Show loading state while initializing
@@ -83,11 +117,45 @@ export default function CreateCVPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-6 lg:py-8">
         <div className="mb-4 sm:mb-6 lg:mb-8">
+          {isEditing && (
+            <div className="mb-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => router.push('/profile')}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Atpakaļ uz profilu
+              </Button>
+            </div>
+          )}
+          
+          {/* AI CV Creator Button - Prominent */}
+          {!isEditing && (
+            <div className="mb-6 text-center">
+              <Button 
+                onClick={() => setShowAICreator(true)}
+                size="lg"
+                className="bg-gradient-to-r from-latvian-red to-red-600 hover:from-latvian-red/90 hover:to-red-600/90 text-white shadow-lg shadow-primary/25 px-8 py-4 text-lg font-semibold"
+              >
+                <Sparkles className="w-6 h-6 mr-3" />
+                🚀 Izveidot CV ar AI - Automātiski!
+              </Button>
+              <p className="text-sm text-muted-foreground mt-2">
+                AI ģenerēs profesionālu CV balstoties uz jūsu ievadīto informāciju
+              </p>
+            </div>
+          )}
+
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2 text-center sm:text-left">
-            {t('createCV')}
+            {isEditing ? 'Rediģēt CV' : t('createCV')}
           </h1>
           <p className="text-xs sm:text-sm lg:text-base text-muted-foreground text-center sm:text-left">
-            Izveidojiet savu profesionālo CV, izmantojot mūsu interaktīvo redaktoru
+            {isEditing 
+              ? 'Rediģējiet savu CV, izmantojot mūsu interaktīvo redaktoru'
+              : 'Izveidojiet savu profesionālo CV, izmantojot mūsu interaktīvo redaktoru'
+            }
           </p>
         </div>
 
@@ -197,6 +265,18 @@ export default function CreateCVPage() {
           </div>
         </div>
       </div>
+
+      {/* AI CV Creator Modal */}
+      {showAICreator && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <AICVCreator 
+              onCVGenerated={handleAICVGenerated}
+              onClose={() => setShowAICreator(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }
