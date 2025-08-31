@@ -225,7 +225,95 @@ Make the CV specifically relevant to this job opportunity.
       .map(msg => `${msg.type === 'user' ? 'User' : 'AI'}: ${msg.content}`)
       .join('\n');
     
-    const prompt = `
+    // Determine conversation stage and generate appropriate response
+    const conversationStage = this.analyzeConversationStage(conversationHistory, userMessage);
+    
+    let prompt = '';
+    
+    if (conversationStage === 'greeting') {
+      prompt = `
+You are a helpful AI CV assistant. The user wants to create a CV. Start by asking what job they are looking for.
+
+Respond in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'}.
+
+Be friendly and professional. Ask: "What job position are you looking for?"
+`;
+    } else if (conversationStage === 'job_info') {
+      prompt = `
+Based on the user's response about their job, ask about their experience level.
+
+Conversation History:
+${conversationContext}
+
+User's Latest Message: ${userMessage}
+
+Ask about experience level in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'}.
+Examples: "How many years of experience do you have?" or "Are you entry-level, mid-level, or senior?"
+`;
+    } else if (conversationStage === 'experience') {
+      prompt = `
+Based on the user's experience level, ask about their education.
+
+Conversation History:
+${conversationContext}
+
+User's Latest Message: ${userMessage}
+
+Ask about education in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'}.
+Examples: "What is your highest level of education?" or "What did you study?"
+`;
+    } else if (conversationStage === 'education') {
+      prompt = `
+Based on the user's education, ask about their key skills.
+
+Conversation History:
+${conversationContext}
+
+User's Latest Message: ${userMessage}
+
+Ask about skills in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'}.
+Examples: "What are your main skills?" or "What technical skills do you have?"
+`;
+    } else if (conversationStage === 'skills') {
+      prompt = `
+Based on the user's skills, ask about languages they speak.
+
+Conversation History:
+${conversationContext}
+
+User's Latest Message: ${userMessage}
+
+Ask about languages in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'}.
+Examples: "What languages do you speak?" or "What is your native language?"
+`;
+    } else if (conversationStage === 'languages') {
+      prompt = `
+Based on all the information gathered, provide a CV summary and ask if they want to add more details.
+
+Conversation History:
+${conversationContext}
+
+User's Latest Message: ${userMessage}
+
+Provide a CV summary in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'} and ask if they want to add more information or proceed to generate the CV.
+
+Format: Start with "CV Summary:" then provide a brief summary of what you've gathered, then ask if they want to add more or generate the CV.
+`;
+    } else if (conversationStage === 'summary_confirmation') {
+      prompt = `
+The user has confirmed the CV summary. Generate the complete CV.
+
+Conversation History:
+${conversationContext}
+
+User's Latest Message: ${userMessage}
+
+Generate a complete, professional CV in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'} based on all the information gathered.
+
+Include all sections: Personal Info, Summary, Experience, Education, Skills, Languages.
+`;
+    } else {
+      prompt = `
 Based on our conversation about creating a CV, please respond to the user's latest message.
 
 Conversation History:
@@ -243,9 +331,38 @@ Please:
 
 Be conversational and helpful. Ask one question at a time to avoid overwhelming the user.
 `;
+    }
 
     const systemPrompt = AI_CONFIG.PROMPTS[language].system;
     return this.makeRequest(prompt, systemPrompt);
+  }
+
+  private analyzeConversationStage(conversationHistory: Array<{ type: 'user' | 'ai'; content: string; timestamp: Date }>, currentMessage: string): string {
+    const userMessages = conversationHistory.filter(msg => msg.type === 'user');
+    const aiMessages = conversationHistory.filter(msg => msg.type === 'ai');
+    
+    // If this is the first user message, it's greeting
+    if (userMessages.length === 0) return 'greeting';
+    
+    // Check conversation flow based on AI questions and user responses
+    const lastAIMessage = aiMessages[aiMessages.length - 1]?.content.toLowerCase() || '';
+    const currentUserMessage = currentMessage.toLowerCase();
+    
+    if (lastAIMessage.includes('job') || lastAIMessage.includes('amatu') || lastAIMessage.includes('должность') || lastAIMessage.includes('position')) {
+      return 'job_info';
+    } else if (lastAIMessage.includes('experience') || lastAIMessage.includes('pieredze') || lastAIMessage.includes('опыт') || lastAIMessage.includes('years')) {
+      return 'experience';
+    } else if (lastAIMessage.includes('education') || lastAIMessage.includes('izglītība') || lastAIMessage.includes('образование') || lastAIMessage.includes('study')) {
+      return 'education';
+    } else if (lastAIMessage.includes('skills') || lastAIMessage.includes('prasmes') || lastAIMessage.includes('навыки') || lastAIMessage.includes('technical')) {
+      return 'skills';
+    } else if (lastAIMessage.includes('language') || lastAIMessage.includes('valoda') || lastAIMessage.includes('язык') || lastAIMessage.includes('speak')) {
+      return 'languages';
+    } else if (lastAIMessage.includes('summary') || lastAIMessage.includes('kopsavilkums') || lastAIMessage.includes('резюме') || lastAIMessage.includes('generate')) {
+      return 'summary_confirmation';
+    }
+    
+    return 'general';
   }
 
   async generateCVFromConversation(request: CVFromConversationRequest): Promise<AIResponse> {

@@ -220,6 +220,30 @@ check_dependencies() {
     print_success "Production dependencies checked"
 }
 
+# Function to install AI service if not available
+install_ai_service() {
+    print_status "Installing AI service (Ollama)..."
+    
+    if ! command -v ollama >/dev/null 2>&1; then
+        print_status "Downloading and installing Ollama..."
+        curl -fsSL https://ollama.ai/install.sh | sh
+        
+        # Add ollama to PATH for current session
+        export PATH="/usr/local/bin:$PATH"
+        
+        if command -v ollama >/dev/null 2>&1; then
+            print_success "Ollama installed successfully"
+        else
+            print_error "Failed to install Ollama"
+            return 1
+        fi
+    else
+        print_success "Ollama already installed"
+    fi
+    
+    return 0
+}
+
 # Function to check AI service
 check_ai_service() {
     print_status "Checking AI service..."
@@ -234,8 +258,13 @@ check_ai_service() {
         fi
     else
         print_warning "AI service (Ollama) is not installed"
-        print_status "Run './scripts/setup-ai.sh --service' to install AI capabilities"
-        return 1
+        print_status "Installing Ollama automatically..."
+        if install_ai_service; then
+            return 0
+        else
+            print_error "Failed to install AI service"
+            return 1
+        fi
     fi
 }
 
@@ -260,6 +289,16 @@ start_ai_service() {
         # Verify service is running
         if curl -s http://localhost:11434/api/version >/dev/null 2>&1; then
             print_success "AI service is running"
+            
+            # Check if we have a compatible model
+            print_status "Checking for compatible AI models..."
+            if ollama list | grep -q "phi3:mini\|llama2:3b\|mistral:7b-instruct-q4_0"; then
+                print_success "Compatible AI model found"
+            else
+                print_warning "No compatible AI model found. Installing phi3:mini..."
+                ollama pull phi3:mini
+                print_success "AI model installed"
+            fi
         else
             print_warning "AI service may not be running properly"
         fi
