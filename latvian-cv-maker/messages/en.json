@@ -1,0 +1,131 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "remove": "Remove",
+    "download": "Download",
+    "preview": "Preview",
+    "print": "Print",
+    "share": "Share",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "optional": "Optional"
+  },
+  "navigation": {
+    "home": "Home",
+    "createCV": "Create CV",
+    "templates": "Templates",
+    "myCV": "My CV",
+    "coverLetter": "Cover Letter",
+    "help": "Help"
+  },
+  "personalInfo": {
+    "title": "Personal Information",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "street": "Street",
+    "city": "City",
+    "postalCode": "Postal Code",
+    "country": "Country",
+    "dateOfBirth": "Date of Birth",
+    "nationality": "Nationality",
+    "maritalStatus": "Marital Status",
+    "drivingLicense": "Driving License",
+    "photo": "Photo",
+    "website": "Website",
+    "linkedin": "LinkedIn Profile",
+    "github": "GitHub Profile"
+  },
+  "workExperience": {
+    "title": "Work Experience",
+    "position": "Position",
+    "company": "Company",
+    "location": "Location",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "current": "Current Position",
+    "description": "Description",
+    "achievements": "Achievements",
+    "addExperience": "Add Work Experience"
+  },
+  "education": {
+    "title": "Education",
+    "degree": "Degree/Qualification",
+    "institution": "Institution",
+    "location": "Location",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "current": "Currently Studying",
+    "gpa": "GPA",
+    "description": "Description",
+    "thesis": "Thesis",
+    "addEducation": "Add Education"
+  },
+  "skills": {
+    "title": "Skills",
+    "languageSkills": "Language Skills",
+    "itSkills": "IT Skills",
+    "otherSkills": "Other Skills",
+    "language": "Language",
+    "proficiency": "Proficiency",
+    "certifications": "Certifications",
+    "category": "Category",
+    "yearsOfExperience": "Years of Experience",
+    "addLanguage": "Add Language",
+    "addITSkill": "Add IT Skill",
+    "addSkill": "Add Skill"
+  },
+  "references": {
+    "title": "References",
+    "name": "Name",
+    "position": "Position",
+    "company": "Company",
+    "email": "Email",
+    "phone": "Phone",
+    "relationship": "Relationship",
+    "addReference": "Add Reference"
+  },
+  "templates": {
+    "europass": "Europass",
+    "modern": "Modern",
+    "traditional": "Traditional",
+    "creative": "Creative",
+    "selectTemplate": "Select Template"
+  },
+  "export": {
+    "title": "Export CV",
+    "pdf": "PDF Format",
+    "docx": "Word Document",
+    "txt": "Text File",
+    "atsOptimized": "ATS Optimized"
+  },
+  "validation": {
+    "required": "This field is required",
+    "email": "Invalid email format",
+    "phone": "Invalid phone number",
+    "url": "Invalid URL",
+    "date": "Invalid date"
+  },
+  "privacy": {
+    "title": "Privacy Settings",
+    "public": "Public",
+    "private": "Private",
+    "shareableLink": "Shareable Link",
+    "allowDownload": "Allow Download",
+    "allowCopy": "Allow Copy",
+    "expirationDate": "Expiration Date"
+  },
+  "tips": {
+    "personalInfo": "Ensure all contact information is current and professional.",
+    "workExperience": "Describe your achievements with specific examples and numbers.",
+    "education": "Include only relevant education related to your desired position.",
+    "skills": "List only skills you can prove with experience or certifications."
+  }
+}

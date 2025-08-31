@@ -1,0 +1,131 @@
+{
+  "common": {
+    "save": "Saglabāt",
+    "cancel": "Atcelt",
+    "delete": "Dzēst",
+    "edit": "Rediģēt",
+    "add": "Pievienot",
+    "remove": "Noņemt",
+    "download": "Lejupielādēt",
+    "preview": "Priekšskatījums",
+    "print": "Drukāt",
+    "share": "Dalīties",
+    "next": "Nākamais",
+    "previous": "Iepriekšējais",
+    "finish": "Pabeigt",
+    "optional": "Nav obligāti"
+  },
+  "navigation": {
+    "home": "Sākums",
+    "createCV": "Izveidot CV",
+    "templates": "Veidnes",
+    "myCV": "Mans CV",
+    "coverLetter": "Pavadvēstule",
+    "help": "Palīdzība"
+  },
+  "personalInfo": {
+    "title": "Personālā informācija",
+    "firstName": "Vārds",
+    "lastName": "Uzvārds",
+    "email": "E-pasts",
+    "phone": "Telefons",
+    "address": "Adrese",
+    "street": "Iela",
+    "city": "Pilsēta",
+    "postalCode": "Pasta indekss",
+    "country": "Valsts",
+    "dateOfBirth": "Dzimšanas datums",
+    "nationality": "Tautība",
+    "maritalStatus": "Ģimenes stāvoklis",
+    "drivingLicense": "Autovadītāja apliecība",
+    "photo": "Fotogrāfija",
+    "website": "Mājaslapa",
+    "linkedin": "LinkedIn profils",
+    "github": "GitHub profils"
+  },
+  "workExperience": {
+    "title": "Darba pieredze",
+    "position": "Amats",
+    "company": "Uzņēmums",
+    "location": "Atrašanās vieta",
+    "startDate": "Sākuma datums",
+    "endDate": "Beigu datums",
+    "current": "Pašreizējais darbs",
+    "description": "Apraksts",
+    "achievements": "Sasniegumi",
+    "addExperience": "Pievienot darba pieredzi"
+  },
+  "education": {
+    "title": "Izglītība",
+    "degree": "Grāds/Kvalifikācija",
+    "institution": "Izglītības iestāde",
+    "location": "Atrašanās vieta",
+    "startDate": "Sākuma datums",
+    "endDate": "Beigu datums",
+    "current": "Pašreizējās studijas",
+    "gpa": "Vidējā atzīme",
+    "description": "Apraksts",
+    "thesis": "Diplomdarbs",
+    "addEducation": "Pievienot izglītību"
+  },
+  "skills": {
+    "title": "Prasmes",
+    "languageSkills": "Valodu prasmes",
+    "itSkills": "IT prasmes",
+    "otherSkills": "Citas prasmes",
+    "language": "Valoda",
+    "proficiency": "Līmenis",
+    "certifications": "Sertifikāti",
+    "category": "Kategorija",
+    "yearsOfExperience": "Pieredzes gadi",
+    "addLanguage": "Pievienot valodu",
+    "addITSkill": "Pievienot IT prasmi",
+    "addSkill": "Pievienot prasmi"
+  },
+  "references": {
+    "title": "Atsauksmes",
+    "name": "Vārds",
+    "position": "Amats",
+    "company": "Uzņēmums",
+    "email": "E-pasts",
+    "phone": "Telefons",
+    "relationship": "Attiecības",
+    "addReference": "Pievienot atsauksmi"
+  },
+  "templates": {
+    "europass": "Europass",
+    "modern": "Mūsdienīgs",
+    "traditional": "Tradicionāls",
+    "creative": "Radošs",
+    "selectTemplate": "Izvēlēties veidni"
+  },
+  "export": {
+    "title": "Eksportēt CV",
+    "pdf": "PDF formāts",
+    "docx": "Word dokuments",
+    "txt": "Teksta fails",
+    "atsOptimized": "ATS optimizēts"
+  },
+  "validation": {
+    "required": "Šis lauks ir obligāts",
+    "email": "Nederīgs e-pasta formāts",
+    "phone": "Nederīgs tālruņa numurs",
+    "url": "Nederīgs URL",
+    "date": "Nederīgs datums"
+  },
+  "privacy": {
+    "title": "Privātuma iestatījumi",
+    "public": "Publisks",
+    "private": "Privāts",
+    "shareableLink": "Dalāms saites",
+    "allowDownload": "Atļaut lejupielādi",
+    "allowCopy": "Atļaut kopēšanu",
+    "expirationDate": "Derīguma termiņš"
+  },
+  "tips": {
+    "personalInfo": "Pārliecinieties, ka visa kontaktinformācija ir aktuāla un profesionāla.",
+    "workExperience": "Aprakstiet savus sasniegumus ar konkrētiem piemēriem un skaitļiem.",
+    "education": "Iekļaujiet tikai relevantu izglītību, kas saistīta ar vēlamo amatu.",
+    "skills": "Norādiet tikai tās prasmes, kuras varat pierādīt ar pieredzi vai sertifikātiem."
+  }
+}
