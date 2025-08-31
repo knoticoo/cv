@@ -17,8 +17,14 @@ export function formatDate(date: string, locale: string = 'lv'): string {
   return dateObj.toLocaleDateString(locale, options);
 }
 
+let idCounter = 0;
+
 export function generateId(): string {
-  return Math.random().toString(36).substr(2, 9);
+  // Use a counter-based approach for SSR compatibility
+  // This ensures the same ID is generated on both server and client
+  idCounter += 1;
+  const timestamp = Date.now();
+  return `id-${timestamp}-${idCounter}`;
 }
 
 export function validateEmail(email: string): boolean {
