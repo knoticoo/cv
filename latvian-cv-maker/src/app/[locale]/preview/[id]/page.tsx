@@ -154,8 +154,7 @@ export default function CVPreviewPage() {
               </Button>
               <PDFDownloadButton 
                 cvData={cvData} 
-                variant="outline"
-                size="sm"
+                locale="lv"
               />
               <Button 
                 variant="outline" 
@@ -176,7 +175,6 @@ export default function CVPreviewPage() {
           <CVPreview 
             cvData={cvData} 
             onUpdate={() => {}} // Read-only in preview mode
-            showPrintStyles={showPrintStyles}
           />
         </div>
       </div>
