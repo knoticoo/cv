@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { CVData } from '@/types/cv';
 import { Button } from '@/components/ui/button';
-import { Printer, Share2, Eye, Palette } from 'lucide-react';
+import { Printer, Share2, Eye, Palette, Download } from 'lucide-react';
 import PDFDownloadButton from './PDFDownloadButton';
 import TemplateRenderer from './TemplateRenderer';
 import TemplateSelector from './TemplateSelector';
@@ -18,8 +18,6 @@ export default function CVPreview({ cvData, onUpdate }: CVPreviewProps) {
   const t = useTranslations();
   const locale = useLocale();
   const [showTemplateSelector, setShowTemplateSelector] = useState(false);
-
-
 
   const handlePrint = () => {
     window.print();
@@ -40,13 +38,36 @@ export default function CVPreview({ cvData, onUpdate }: CVPreviewProps) {
   return (
     <div className="bg-white rounded-lg shadow-sm border">
       {/* Preview Header */}
-      <div className="p-4 border-b bg-gray-50">
-        <div className="flex items-center justify-between">
+      <div className="p-3 sm:p-4 border-b bg-gray-50">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center space-x-2">
             <Eye className="w-5 h-5 text-primary" />
-            <h2 className="text-lg font-semibold">CV Priekšskatījums</h2>
+            <h2 className="text-base sm:text-lg font-semibold">CV Priekšskatījums</h2>
           </div>
-          <div className="flex items-center space-x-2">
+          
+          {/* Mobile Action Buttons */}
+          <div className="flex flex-wrap gap-2 sm:hidden">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={() => setShowTemplateSelector(!showTemplateSelector)}
+              className="flex-1"
+            >
+              <Palette className="w-4 h-4 mr-2" />
+              Veidne
+            </Button>
+            <Button variant="outline" size="sm" onClick={handlePrint} className="flex-1">
+              <Printer className="w-4 h-4 mr-2" />
+              Drukāt
+            </Button>
+            <Button variant="outline" size="sm" onClick={handleShare} className="flex-1">
+              <Share2 className="w-4 h-4 mr-2" />
+              Dalīties
+            </Button>
+          </div>
+          
+          {/* Desktop Action Buttons */}
+          <div className="hidden sm:flex items-center space-x-2">
             <Button 
               variant="outline" 
               size="sm" 
@@ -67,6 +88,15 @@ export default function CVPreview({ cvData, onUpdate }: CVPreviewProps) {
             />
           </div>
         </div>
+        
+        {/* Mobile PDF Download Button - Full Width */}
+        <div className="sm:hidden mt-3">
+          <PDFDownloadButton 
+            cvData={cvData} 
+            locale={locale}
+            className="w-full h-10"
+          />
+        </div>
       </div>
 
       {/* Template Selector */}
@@ -81,7 +111,7 @@ export default function CVPreview({ cvData, onUpdate }: CVPreviewProps) {
       )}
 
       {/* CV Content */}
-      <div className="cv-preview" style={{ minHeight: '297mm' }}>
+      <div className="cv-preview overflow-x-auto" style={{ minHeight: '297mm' }}>
         <TemplateRenderer 
           cvData={cvData}
           templateId={cvData.template}
@@ -90,7 +120,7 @@ export default function CVPreview({ cvData, onUpdate }: CVPreviewProps) {
       </div>
 
       {/* Footer */}
-      <div className="p-4 border-t bg-gray-50 text-center text-sm text-gray-500">
+      <div className="p-3 sm:p-4 border-t bg-gray-50 text-center text-xs sm:text-sm text-gray-500">
         Izveidots ar Latvian CV Maker • 2024
       </div>
     </div>

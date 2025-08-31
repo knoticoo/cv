@@ -14,127 +14,203 @@ Font.register({
 const styles = StyleSheet.create({
   page: {
     fontFamily: 'Inter',
-    fontSize: 11,
-    lineHeight: 1.4,
-    padding: 40,
+    fontSize: 10,
+    lineHeight: 1.5,
+    padding: 30,
     backgroundColor: '#ffffff',
+    color: '#1f2937',
   },
   header: {
     flexDirection: 'row',
-    marginBottom: 30,
+    marginBottom: 25,
     paddingBottom: 20,
     borderBottomWidth: 2,
     borderBottomColor: '#e11d48',
+    alignItems: 'flex-start',
   },
   photoContainer: {
-    width: 100,
-    height: 100,
+    width: 80,
+    height: 80,
     marginRight: 20,
+    flexShrink: 0,
   },
   photo: {
     width: '100%',
     height: '100%',
-    borderRadius: 8,
+    borderRadius: 6,
   },
   headerInfo: {
     flex: 1,
   },
   name: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: 700,
     color: '#1f2937',
     marginBottom: 8,
+    lineHeight: 1.2,
   },
   contactInfo: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#6b7280',
-    marginBottom: 2,
+    marginBottom: 3,
+    lineHeight: 1.3,
   },
   section: {
-    marginBottom: 20,
+    marginBottom: 18,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 700,
     color: '#1f2937',
-    marginBottom: 10,
-    paddingBottom: 4,
+    marginBottom: 12,
+    paddingBottom: 6,
     borderBottomWidth: 1,
     borderBottomColor: '#e11d48',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   experienceItem: {
-    marginBottom: 15,
-    paddingLeft: 15,
-    borderLeftWidth: 3,
+    marginBottom: 16,
+    paddingLeft: 12,
+    borderLeftWidth: 2,
     borderLeftColor: '#e11d48',
   },
   jobTitle: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: 600,
     color: '#1f2937',
-    marginBottom: 2,
+    marginBottom: 3,
+    lineHeight: 1.3,
   },
   company: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: 500,
     color: '#e11d48',
-    marginBottom: 2,
+    marginBottom: 3,
+    lineHeight: 1.3,
   },
   dateLocation: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#6b7280',
-    marginBottom: 4,
+    marginBottom: 6,
+    lineHeight: 1.3,
+    fontStyle: 'italic',
   },
   description: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#374151',
     lineHeight: 1.4,
     marginBottom: 4,
+    textAlign: 'justify',
   },
   achievementsList: {
-    paddingLeft: 15,
+    paddingLeft: 12,
+    marginTop: 6,
   },
   achievement: {
-    fontSize: 10,
+    fontSize: 9,
     color: '#374151',
-    marginBottom: 2,
+    marginBottom: 3,
+    lineHeight: 1.4,
   },
   skillsGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: 6,
+    marginTop: 8,
   },
   skillBadge: {
     backgroundColor: '#fef2f2',
     color: '#e11d48',
     paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    fontSize: 9,
+    paddingVertical: 3,
+    borderRadius: 10,
+    fontSize: 8,
     fontWeight: 500,
+    borderWidth: 1,
+    borderColor: '#fecaca',
   },
   languageSkill: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: '#f9fafb',
-    padding: 8,
-    borderRadius: 6,
-    marginBottom: 4,
+    padding: 6,
+    borderRadius: 4,
+    marginBottom: 3,
+    borderWidth: 1,
+    borderColor: '#f3f4f6',
   },
   languageName: {
-    fontSize: 11,
+    fontSize: 10,
     fontWeight: 500,
     color: '#1f2937',
   },
   proficiencyBadge: {
     backgroundColor: '#e11d48',
     color: '#ffffff',
-    paddingHorizontal: 6,
+    paddingHorizontal: 5,
     paddingVertical: 2,
-    borderRadius: 8,
-    fontSize: 8,
+    borderRadius: 6,
+    fontSize: 7,
     fontWeight: 600,
+    textTransform: 'uppercase',
+    letterSpacing: 0.3,
+  },
+  educationItem: {
+    marginBottom: 14,
+    paddingLeft: 12,
+    borderLeftWidth: 2,
+    borderLeftColor: '#10b981',
+  },
+  degree: {
+    fontSize: 12,
+    fontWeight: 600,
+    color: '#1f2937',
+    marginBottom: 3,
+    lineHeight: 1.3,
+  },
+  institution: {
+    fontSize: 11,
+    fontWeight: 500,
+    color: '#10b981',
+    marginBottom: 3,
+    lineHeight: 1.3,
+  },
+  referenceItem: {
+    marginBottom: 12,
+    paddingLeft: 12,
+    borderLeftWidth: 2,
+    borderLeftColor: '#8b5cf6',
+  },
+  referenceName: {
+    fontSize: 11,
+    fontWeight: 600,
+    color: '#1f2937',
+    marginBottom: 2,
+  },
+  referencePosition: {
+    fontSize: 10,
+    fontWeight: 500,
+    color: '#8b5cf6',
+    marginBottom: 2,
+  },
+  referenceContact: {
+    fontSize: 9,
+    color: '#6b7280',
+    marginBottom: 2,
+  },
+  referenceRelationship: {
+    fontSize: 9,
+    color: '#374151',
+    fontStyle: 'italic',
+  },
+  summaryText: {
+    fontSize: 10,
+    color: '#374151',
+    lineHeight: 1.5,
+    textAlign: 'justify',
+    marginTop: 6,
   },
 });
 
@@ -148,12 +224,23 @@ export const CVPDF = ({ cvData, locale }: CVPDFProps) => {
 
   const formatDate = (date: string): string => {
     if (!date) return '';
-    const dateObj = new Date(date);
-    const options: Intl.DateTimeFormatOptions = { 
-      year: 'numeric', 
-      month: 'long' 
-    };
-    return dateObj.toLocaleDateString(locale, options);
+    try {
+      const dateObj = new Date(date);
+      const options: Intl.DateTimeFormatOptions = { 
+        year: 'numeric', 
+        month: 'short' 
+      };
+      return dateObj.toLocaleDateString(locale, options);
+    } catch {
+      return date;
+    }
+  };
+
+  const formatDateRange = (startDate: string, endDate?: string, current?: boolean): string => {
+    const start = formatDate(startDate);
+    if (current) return `${start} - tagad`;
+    if (endDate) return `${start} - ${formatDate(endDate)}`;
+    return start;
   };
 
   return (
@@ -194,7 +281,7 @@ export const CVPDF = ({ cvData, locale }: CVPDFProps) => {
         {cvData.professionalSummary && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Profesionālais kopsavilkums</Text>
-            <Text style={styles.description}>{cvData.professionalSummary}</Text>
+            <Text style={styles.summaryText}>{cvData.professionalSummary}</Text>
           </View>
         )}
 
@@ -207,7 +294,7 @@ export const CVPDF = ({ cvData, locale }: CVPDFProps) => {
                 <Text style={styles.jobTitle}>{exp.position}</Text>
                 <Text style={styles.company}>{exp.company}</Text>
                 <Text style={styles.dateLocation}>
-                  {formatDate(exp.startDate)} - {exp.current ? 'tagad' : formatDate(exp.endDate || '')}
+                  {formatDateRange(exp.startDate, exp.endDate, exp.current)}
                   {exp.location && ` • ${exp.location}`}
                 </Text>
                 {exp.description && (
@@ -232,11 +319,11 @@ export const CVPDF = ({ cvData, locale }: CVPDFProps) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Izglītība</Text>
             {cvData.education.map((edu) => (
-              <View key={edu.id} style={styles.experienceItem}>
-                <Text style={styles.jobTitle}>{edu.degree}</Text>
-                <Text style={styles.company}>{edu.institution}</Text>
+              <View key={edu.id} style={styles.educationItem}>
+                <Text style={styles.degree}>{edu.degree}</Text>
+                <Text style={styles.institution}>{edu.institution}</Text>
                 <Text style={styles.dateLocation}>
-                  {formatDate(edu.startDate)} - {edu.current ? 'tagad' : formatDate(edu.endDate || '')}
+                  {formatDateRange(edu.startDate, edu.endDate, edu.current)}
                   {edu.location && ` • ${edu.location}`}
                 </Text>
                 {edu.gpa && (
@@ -299,12 +386,12 @@ export const CVPDF = ({ cvData, locale }: CVPDFProps) => {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Atsauksmes</Text>
             {cvData.references.map((ref) => (
-              <View key={ref.id} style={{ marginBottom: 10 }}>
-                <Text style={styles.jobTitle}>{ref.name}</Text>
-                <Text style={styles.company}>{ref.position} • {ref.company}</Text>
-                <Text style={styles.contactInfo}>{ref.email}</Text>
-                {ref.phone && <Text style={styles.contactInfo}>{ref.phone}</Text>}
-                <Text style={styles.description}>{ref.relationship}</Text>
+              <View key={ref.id} style={styles.referenceItem}>
+                <Text style={styles.referenceName}>{ref.name}</Text>
+                <Text style={styles.referencePosition}>{ref.position} • {ref.company}</Text>
+                <Text style={styles.referenceContact}>{ref.email}</Text>
+                {ref.phone && <Text style={styles.referenceContact}>{ref.phone}</Text>}
+                <Text style={styles.referenceRelationship}>{ref.relationship}</Text>
               </View>
             ))}
           </View>
