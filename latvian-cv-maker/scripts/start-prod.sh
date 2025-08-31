@@ -64,4 +64,3 @@ echo "⚡ Performance optimizations enabled"
 echo ""
 
 # Start the server
-exec npm run start:prod
