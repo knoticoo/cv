@@ -23,6 +23,52 @@
     "coverLetter": "Pavadvēstule",
     "help": "Palīdzība"
   },
+  "homepage": {
+    "hero": {
+      "title": "Profesionāls CV veidotājs",
+      "subtitle": "Latvijas tirgum",
+      "description": "Izveidojiet izcilu CV minūtēs. Daudzvalodu atbalsts, Europass saderība un optimizācija Latvijas darba devējiem.",
+      "startButton": "Sākt CV izveidi",
+      "templatesButton": "Skatīt veidnes"
+    },
+    "features": {
+      "title": "Kāpēc izvēlēties mūsu CV veidotāju?",
+      "subtitle": "Mēs esam izveidojuši šo rīku īpaši Latvijas darba tirgum, ņemot vērā vietējos standartus un prasības.",
+      "multilingual": {
+        "title": "Daudzvalodu atbalsts",
+        "description": "Izveidojiet CV latviešu, krievu un angļu valodā"
+      },
+      "europass": {
+        "title": "Europass saderība",
+        "description": "Profesionālas veidnes, kas atbilst ES standartiem"
+      },
+      "security": {
+        "title": "Datu drošība",
+        "description": "Jūsu personālā informācija ir droši aizsargāta"
+      },
+      "fast": {
+        "title": "Ātri un vienkārši",
+        "description": "Izveidojiet CV minūtēs ar mūsu intuitīvo redaktoru"
+      },
+      "employer": {
+        "title": "Darba devēju iecienīts",
+        "description": "Optimizēts Latvijas darba tirgum un ATS sistēmām"
+      },
+      "formats": {
+        "title": "Vairāki formāti",
+        "description": "Eksportējiet kā PDF, Word vai teksta formātā"
+      }
+    },
+    "cta": {
+      "title": "Gatavs sākt?",
+      "description": "Pievienojieties tūkstošiem lietotāju, kas jau ir izveidojuši savus profesionālos CV ar mūsu palīdzību.",
+      "button": "Izveidot CV tagad"
+    },
+    "footer": {
+      "copyright": "© 2024 Latvijas CV veidotājs. Visas tiesības aizsargātas.",
+      "madeWith": "Izveidots ar ❤️ Latvijas darba meklētājiem"
+    }
+  },
   "personalInfo": {
     "title": "Personālā informācija",
     "firstName": "Vārds",
