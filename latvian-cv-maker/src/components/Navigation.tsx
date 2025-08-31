@@ -3,7 +3,7 @@
 import { useTranslations, useLocale } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
-import { Globe, FileText, Template, User, Mail, HelpCircle, Crown } from 'lucide-react';
+import { Globe, FileText, Layout, User, Mail, HelpCircle, Crown } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navigation() {
@@ -14,7 +14,7 @@ export default function Navigation() {
   const navItems = [
     { href: '/', label: t('home'), icon: FileText },
     { href: '/create', label: t('createCV'), icon: User },
-    { href: '/templates', label: t('templates'), icon: Template },
+    { href: '/templates', label: t('templates'), icon: Layout },
     { href: '/premium', label: 'Premium', icon: Crown },
     { href: '/cover-letter', label: t('coverLetter'), icon: Mail },
     { href: '/help', label: t('help'), icon: HelpCircle },
