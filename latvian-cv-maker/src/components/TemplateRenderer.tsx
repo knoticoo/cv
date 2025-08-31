@@ -2,6 +2,8 @@
 
 import { CVData } from '@/types/cv';
 import EuropassTemplate from './templates/EuropassTemplate';
+import ModernProfessionalTemplate from './templates/ModernProfessionalTemplate';
+import TraditionalBusinessTemplate from './templates/TraditionalBusinessTemplate';
 import CreativeDesignerTemplate from './templates/CreativeDesignerTemplate';
 import CreativeMinimalistTemplate from './templates/CreativeMinimalistTemplate';
 import CreativeColorfulTemplate from './templates/CreativeColorfulTemplate';
@@ -19,6 +21,10 @@ export default function TemplateRenderer({ cvData, templateId, locale }: Templat
     switch (templateId) {
       case 'europass':
         return <EuropassTemplate cvData={cvData} locale={locale} />;
+      case 'modern-professional':
+        return <ModernProfessionalTemplate cvData={cvData} locale={locale} />;
+      case 'traditional-business':
+        return <TraditionalBusinessTemplate cvData={cvData} locale={locale} />;
       case 'creative-designer':
         return <CreativeDesignerTemplate cvData={cvData} locale={locale} />;
       case 'creative-minimalist':
@@ -29,8 +35,6 @@ export default function TemplateRenderer({ cvData, templateId, locale }: Templat
         return <CreativeInfographicTemplate cvData={cvData} locale={locale} />;
       case 'creative-portfolio':
         return <CreativePortfolioTemplate cvData={cvData} locale={locale} />;
-      case 'modern-professional':
-      case 'traditional-business':
       default:
         // Default to the original preview component for basic templates
         return (
