@@ -223,129 +223,131 @@ export default function CreativePortfolioTemplate({ cvData, locale }: CreativePo
         )}
 
         {/* Skills as Visual Dashboard */}
-        <div className="mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
-            <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
-              Prasmju Dashboard
-            </span>
-          </h2>
-          
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Language Skills Radar */}
-            {cvData.languageSkills.length > 0 && (
-              <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-blue-200">
-                <h3 className="text-xl font-bold text-blue-700 mb-6 flex items-center">
-                  <span className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white mr-3">🌍</span>
-                  Valodas
-                </h3>
-                <div className="space-y-4">
-                  {cvData.languageSkills.map((lang, index) => (
-                    <div key={lang.id} className="relative">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="font-semibold text-gray-700">{getLanguageLabel(lang.language, locale)}</span>
-                        <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                          {lang.proficiency}
-                        </span>
-                      </div>
-                      
-                      {/* Circular Progress */}
-                      <div className="relative w-16 h-16 mx-auto">
-                        <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
-                          <circle
-                            cx="32"
-                            cy="32"
-                            r="28"
-                            fill="none"
-                            stroke="#e5e7eb"
-                            strokeWidth="6"
-                          />
-                          <circle
-                            cx="32"
-                            cy="32"
-                            r="28"
-                            fill="none"
-                            stroke="url(#gradient-blue)"
-                            strokeWidth="6"
-                            strokeDasharray={`${(['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'Native'].indexOf(lang.proficiency) + 1) * 14.28} 100`}
-                            strokeLinecap="round"
-                          />
-                          <defs>
-                            <linearGradient id="gradient-blue" x1="0%" y1="0%" x2="100%" y2="100%">
-                              <stop offset="0%" stopColor="#3b82f6" />
-                              <stop offset="100%" stopColor="#06b6d4" />
-                            </linearGradient>
-                          </defs>
-                        </svg>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-xs font-bold text-gray-700">
-                            {Math.round((['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'Native'].indexOf(lang.proficiency) + 1) * 14.28)}%
+        {(cvData.languageSkills.length > 0 || cvData.itSkills.length > 0 || cvData.skills.length > 0) && (
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-8 text-center">
+              <span className="bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Prasmju Dashboard
+              </span>
+            </h2>
+            
+            <div className="grid lg:grid-cols-3 gap-8">
+              {/* Language Skills Radar */}
+              {cvData.languageSkills.length > 0 && (
+                <div className="bg-gradient-to-br from-blue-50 to-cyan-50 rounded-2xl p-6 border-2 border-blue-200">
+                  <h3 className="text-xl font-bold text-blue-700 mb-6 flex items-center">
+                    <span className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white mr-3">🌍</span>
+                    Valodas
+                  </h3>
+                  <div className="space-y-4">
+                    {cvData.languageSkills.map((lang, index) => (
+                      <div key={lang.id} className="relative">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="font-semibold text-gray-700">{getLanguageLabel(lang.language, locale)}</span>
+                          <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            {lang.proficiency}
                           </span>
                         </div>
+                        
+                        {/* Circular Progress */}
+                        <div className="relative w-16 h-16 mx-auto">
+                          <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 64 64">
+                            <circle
+                              cx="32"
+                              cy="32"
+                              r="28"
+                              fill="none"
+                              stroke="#e5e7eb"
+                              strokeWidth="6"
+                            />
+                            <circle
+                              cx="32"
+                              cy="32"
+                              r="28"
+                              fill="none"
+                              stroke="url(#gradient-blue)"
+                              strokeWidth="6"
+                              strokeDasharray={`${(['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'Native'].indexOf(lang.proficiency) + 1) * 14.28} 100`}
+                              strokeLinecap="round"
+                            />
+                            <defs>
+                              <linearGradient id="gradient-blue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stopColor="#3b82f6" />
+                                <stop offset="100%" stopColor="#06b6d4" />
+                              </linearGradient>
+                            </defs>
+                          </svg>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <span className="text-xs font-bold text-gray-700">
+                              {Math.round((['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'Native'].indexOf(lang.proficiency) + 1) * 14.28)}%
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* IT Skills Grid */}
-            {cvData.itSkills.length > 0 && (
-              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border-2 border-purple-200">
-                <h3 className="text-xl font-bold text-purple-700 mb-6 flex items-center">
-                  <span className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white mr-3">💻</span>
-                  Tehnoloģijas
-                </h3>
-                <div className="grid grid-cols-2 gap-3">
-                  {cvData.itSkills.map((skill, index) => (
-                    <div key={skill.id} className="group">
-                      <div className={`
-                        p-3 rounded-xl text-center font-medium text-white text-sm transition-transform duration-200 group-hover:scale-105
-                        ${index % 4 === 0 ? 'bg-gradient-to-br from-purple-500 to-pink-500' :
-                          index % 4 === 1 ? 'bg-gradient-to-br from-pink-500 to-red-500' :
-                          index % 4 === 2 ? 'bg-gradient-to-br from-blue-500 to-purple-500' :
-                          'bg-gradient-to-br from-cyan-500 to-blue-500'
-                        }
-                      `}>
-                        <div className="font-bold text-xs mb-1">{skill.name}</div>
-                        <div className="text-xs opacity-90">{skill.proficiency}</div>
-                        {skill.yearsOfExperience && (
-                          <div className="text-xs opacity-75">{skill.yearsOfExperience}g</div>
-                        )}
+              {/* IT Skills Grid */}
+              {cvData.itSkills.length > 0 && (
+                <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border-2 border-purple-200">
+                  <h3 className="text-xl font-bold text-purple-700 mb-6 flex items-center">
+                    <span className="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white mr-3">💻</span>
+                    Tehnoloģijas
+                  </h3>
+                  <div className="grid grid-cols-2 gap-3">
+                    {cvData.itSkills.map((skill, index) => (
+                      <div key={skill.id} className="group">
+                        <div className={`
+                          p-3 rounded-xl text-center font-medium text-white text-sm transition-transform duration-200 group-hover:scale-105
+                          ${index % 4 === 0 ? 'bg-gradient-to-br from-purple-500 to-pink-500' :
+                            index % 4 === 1 ? 'bg-gradient-to-br from-pink-500 to-red-500' :
+                            index % 4 === 2 ? 'bg-gradient-to-br from-blue-500 to-purple-500' :
+                            'bg-gradient-to-br from-cyan-500 to-blue-500'
+                          }
+                        `}>
+                          <div className="font-bold text-xs mb-1">{skill.name}</div>
+                          <div className="text-xs opacity-90">{skill.proficiency}</div>
+                          {skill.yearsOfExperience && (
+                            <div className="text-xs opacity-75">{skill.yearsOfExperience}g</div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Other Skills Cloud */}
-            {cvData.skills.length > 0 && (
-              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 border-2 border-yellow-200">
-                <h3 className="text-xl font-bold text-orange-700 mb-6 flex items-center">
-                  <span className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white mr-3">⭐</span>
-                  Prasmes
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {cvData.skills.map((skill, index) => (
-                    <span
-                      key={skill.id}
-                      className={`
-                        px-3 py-2 rounded-full text-white font-medium text-sm transition-transform duration-200 hover:scale-105
-                        ${index % 6 === 0 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-                          index % 6 === 1 ? 'bg-gradient-to-r from-orange-500 to-red-500' :
-                          index % 6 === 2 ? 'bg-gradient-to-r from-red-500 to-pink-500' :
-                          index % 6 === 3 ? 'bg-gradient-to-r from-pink-500 to-purple-500' :
-                          index % 6 === 4 ? 'bg-gradient-to-r from-purple-500 to-blue-500' :
-                          'bg-gradient-to-r from-blue-500 to-cyan-500'
-                        }
-                      `}
-                    >
-                      {skill.name}
-                    </span>
-                  ))}
+              {/* Other Skills Cloud */}
+              {cvData.skills.length > 0 && (
+                <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 border-2 border-yellow-200">
+                  <h3 className="text-xl font-bold text-orange-700 mb-6 flex items-center">
+                    <span className="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center text-white mr-3">⭐</span>
+                    Prasmes
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {cvData.skills.map((skill, index) => (
+                      <span
+                        key={skill.id}
+                        className={`
+                          px-3 py-2 rounded-full text-white font-medium text-sm transition-transform duration-200 hover:scale-105
+                          ${index % 6 === 0 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
+                            index % 6 === 1 ? 'bg-gradient-to-r from-orange-500 to-red-500' :
+                            index % 6 === 2 ? 'bg-gradient-to-r from-red-500 to-pink-500' :
+                            index % 6 === 3 ? 'bg-gradient-to-r from-pink-500 to-purple-500' :
+                            index % 6 === 4 ? 'bg-gradient-to-r from-purple-500 to-blue-500' :
+                            'bg-gradient-to-r from-blue-500 to-cyan-500'
+                          }
+                        `}
+                      >
+                        {skill.name}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         )}
 
