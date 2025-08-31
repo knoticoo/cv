@@ -32,7 +32,7 @@ export default function Navigation() {
     ...(user ? [{ href: '/profile', label: 'Mans Profils', icon: UserCircle }] : []),
     { href: '/templates', label: t('templates'), icon: Layout },
     { href: '/premium', label: 'Premium', icon: Crown },
-    { href: '/cover-letter', label: t('coverLetter'), icon: Mail },
+
     { href: '/help', label: t('help'), icon: HelpCircle },
   ];
 
