@@ -9,8 +9,9 @@ import { storage, useAutoSave } from '@/lib/storage';
 import CVEditor from '@/components/CVEditor';
 import CVPreview from '@/components/CVPreview';
 import AICVAssistant from '@/components/AICVAssistant';
+import AICVCreator from '@/components/AICVCreator';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Sparkles } from 'lucide-react';
 
 export default function CreateCVPage() {
   const t = useTranslations('navigation');
@@ -19,6 +20,7 @@ export default function CreateCVPage() {
   const [cvData, setCVData] = useState<CVData | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [showAI, setShowAI] = useState(false);
+  const [showAICreator, setShowAICreator] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -90,6 +92,15 @@ export default function CreateCVPage() {
     triggerAutoSave();
   };
 
+  const handleAICVGenerated = (newCVData: CVData) => {
+    setCVData(newCVData);
+    setShowAICreator(false);
+    setShowAI(false);
+    setShowPreview(false);
+    // Save the generated CV
+    storage.saveCV(newCVData);
+  };
+
   // Show loading state while initializing
   if (!cvData) {
     return (
@@ -119,6 +130,24 @@ export default function CreateCVPage() {
               </Button>
             </div>
           )}
+          
+          {/* AI CV Creator Button - Prominent */}
+          {!isEditing && (
+            <div className="mb-6 text-center">
+              <Button 
+                onClick={() => setShowAICreator(true)}
+                size="lg"
+                className="bg-gradient-to-r from-latvian-red to-red-600 hover:from-latvian-red/90 hover:to-red-600/90 text-white shadow-lg shadow-primary/25 px-8 py-4 text-lg font-semibold"
+              >
+                <Sparkles className="w-6 h-6 mr-3" />
+                🚀 Izveidot CV ar AI - Automātiski!
+              </Button>
+              <p className="text-sm text-muted-foreground mt-2">
+                AI ģenerēs profesionālu CV balstoties uz jūsu ievadīto informāciju
+              </p>
+            </div>
+          )}
+
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2 text-center sm:text-left">
             {isEditing ? 'Rediģēt CV' : t('createCV')}
           </h1>
@@ -236,6 +265,18 @@ export default function CreateCVPage() {
           </div>
         </div>
       </div>
+
+      {/* AI CV Creator Modal */}
+      {showAICreator && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <AICVCreator 
+              onCVGenerated={handleAICVGenerated}
+              onClose={() => setShowAICreator(false)}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,20 +1,35 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link, usePathname } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
-import { Globe, FileText, Layout, User, Mail, HelpCircle, Crown, UserCircle } from 'lucide-react';
+import { Globe, FileText, Layout, User, Mail, HelpCircle, Crown, UserCircle, LogOut } from 'lucide-react';
 import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navigation() {
   const t = useTranslations('navigation');
   const pathname = usePathname();
   const locale = useLocale();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const session = localStorage.getItem('user-session');
+      setUser(session ? JSON.parse(session) : null);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem('user-session');
+    setUser(null);
+    window.location.href = '/';
+  };
 
   const navItems = [
     { href: '/', label: t('home'), icon: FileText },
     { href: '/create', label: t('createCV'), icon: User },
-    { href: '/profile', label: 'Mans Profils', icon: UserCircle },
+    ...(user ? [{ href: '/profile', label: 'Mans Profils', icon: UserCircle }] : []),
     { href: '/templates', label: t('templates'), icon: Layout },
     { href: '/premium', label: 'Premium', icon: Crown },
     { href: '/cover-letter', label: t('coverLetter'), icon: Mail },
@@ -59,9 +74,39 @@ export default function Navigation() {
             })}
           </div>
 
-          {/* Language Switcher */}
+          {/* Language Switcher & Auth */}
           <div className="flex items-center space-x-2">
             <LanguageSwitcher />
+            
+            {user ? (
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-muted-foreground hidden sm:block">
+                  {user.firstName}
+                </span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleLogout}
+                  className="flex items-center gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span className="hidden sm:inline">Iziet</span>
+                </Button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link href="/auth/login">
+                  <Button variant="ghost" size="sm">
+                    Ielogoties
+                  </Button>
+                </Link>
+                <Link href="/auth/register">
+                  <Button size="sm">
+                    Reģistrēties
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 

@@ -5,6 +5,13 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from 'next/navigation';
 import { CVData } from '@/types/cv';
 import { storage } from '@/lib/storage';
+
+// Simple auth check
+const checkAuth = () => {
+  if (typeof window === 'undefined') return null;
+  const session = localStorage.getItem('user-session');
+  return session ? JSON.parse(session) : null;
+};
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -21,7 +28,8 @@ import {
   GraduationCap,
   Star,
   Languages,
-  Monitor
+  Monitor,
+  LogOut
 } from 'lucide-react';
 
 export default function ProfilePage() {
@@ -30,10 +38,17 @@ export default function ProfilePage() {
   
   const [savedCVs, setSavedCVs] = useState<CVData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
+    const authUser = checkAuth();
+    if (!authUser) {
+      router.push('/auth/login');
+      return;
+    }
+    setUser(authUser);
     loadSavedCVs();
-  }, []);
+  }, [router]);
 
   const loadSavedCVs = () => {
     const cvs = storage.getSavedCVs();
@@ -58,6 +73,11 @@ export default function ProfilePage() {
       storage.deleteCV(cvId);
       loadSavedCVs();
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user-session');
+    router.push('/');
   };
 
   const formatDate = (dateString: string) => {
@@ -105,12 +125,34 @@ export default function ProfilePage() {
       <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-6 lg:py-8">
         {/* Header */}
         <div className="mb-6 lg:mb-8">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2 text-center sm:text-left">
-            Mans Profils
-          </h1>
-          <p className="text-sm sm:text-base lg:text-lg text-muted-foreground text-center sm:text-left">
-            Pārvaldiet savus saglabātos CV un izveidojiet jaunus
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+            <div>
+              <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2">
+                Mans Profils
+              </h1>
+              <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
+                Pārvaldiet savus saglabātos CV un izveidojiet jaunus
+              </p>
+            </div>
+            
+            {user && (
+              <div className="flex items-center gap-4">
+                <div className="text-right">
+                  <p className="font-medium">{user.firstName} {user.lastName}</p>
+                  <p className="text-sm text-muted-foreground">{user.email}</p>
+                </div>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleLogout}
+                  className="flex items-center gap-2"
+                >
+                  <LogOut className="w-4 h-4" />
+                  Iziet
+                </Button>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Create New CV Button */}
