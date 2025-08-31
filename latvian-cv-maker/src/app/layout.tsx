@@ -1,13 +1,19 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+};
+
 export const metadata: Metadata = {
   title: 'Latvian CV Maker - Create Professional CVs',
   description: 'Create professional CVs with our easy-to-use editor. Support for Latvian, Russian and English languages. Europass compatible templates.',
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes',
   themeColor: '#3b82f6',
   manifest: '/manifest.json',
   appleWebApp: {

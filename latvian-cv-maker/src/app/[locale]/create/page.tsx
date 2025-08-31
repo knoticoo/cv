@@ -7,12 +7,14 @@ import { generateId } from '@/lib/utils';
 import { storage, useAutoSave } from '@/lib/storage';
 import CVEditor from '@/components/CVEditor';
 import CVPreview from '@/components/CVPreview';
+import AICVAssistant from '@/components/AICVAssistant';
 
 export default function CreateCVPage() {
   const t = useTranslations('navigation');
   
   const [cvData, setCVData] = useState<CVData | null>(null);
   const [showPreview, setShowPreview] = useState(false);
+  const [showAI, setShowAI] = useState(false);
   
   // Always call the hook, but handle null case inside
   const { triggerAutoSave } = useAutoSave(cvData || {} as CVData);
@@ -92,9 +94,9 @@ export default function CreateCVPage() {
         {/* Mobile Toggle Buttons */}
         <div className="flex lg:hidden gap-2 mb-4 sm:mb-6">
           <button
-            onClick={() => setShowPreview(false)}
+            onClick={() => { setShowPreview(false); setShowAI(false); }}
             className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
-              !showPreview 
+              !showPreview && !showAI
                 ? 'bg-primary text-white shadow-lg shadow-primary/25' 
                 : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
             }`}
@@ -102,19 +104,29 @@ export default function CreateCVPage() {
             ✏️ Redaktors
           </button>
           <button
-            onClick={() => setShowPreview(true)}
+            onClick={() => { setShowPreview(true); setShowAI(false); }}
             className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
-              showPreview 
+              showPreview && !showAI
                 ? 'bg-primary text-white shadow-lg shadow-primary/25' 
                 : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
             }`}
           >
             👁️ Priekšskatījums
           </button>
+          <button
+            onClick={() => { setShowPreview(false); setShowAI(true); }}
+            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
+              showAI
+                ? 'bg-primary text-white shadow-lg shadow-primary/25' 
+                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
+            }`}
+          >
+            🤖 AI Asistents
+          </button>
         </div>
 
         {/* Desktop Layout */}
-        <div className="hidden lg:grid lg:grid-cols-2 gap-6 lg:gap-8">
+        <div className="hidden lg:grid lg:grid-cols-3 gap-6 lg:gap-8">
           {/* Editor Panel */}
           <div className="space-y-6">
             <CVEditor 
@@ -127,20 +139,29 @@ export default function CreateCVPage() {
           <div className="lg:sticky lg:top-8">
             <CVPreview cvData={cvData} onUpdate={updateCVData} />
           </div>
+
+          {/* AI Assistant Panel */}
+          <div className="lg:sticky lg:top-8">
+            <AICVAssistant cvData={cvData} onCVUpdate={updateCVData} />
+          </div>
         </div>
 
         {/* Mobile Layout */}
         <div className="lg:hidden">
-          {!showPreview ? (
+          {!showPreview && !showAI ? (
             <div className="animate-fade-in">
               <CVEditor 
                 cvData={cvData} 
                 onUpdate={updateCVData}
               />
             </div>
-          ) : (
+          ) : showPreview ? (
             <div className="animate-fade-in">
               <CVPreview cvData={cvData} onUpdate={updateCVData} />
+            </div>
+          ) : (
+            <div className="animate-fade-in">
+              <AICVAssistant cvData={cvData} onCVUpdate={updateCVData} />
             </div>
           )}
         </div>
@@ -148,12 +169,24 @@ export default function CreateCVPage() {
         {/* Mobile Quick Actions */}
         <div className="lg:hidden mt-6 p-4 bg-white rounded-lg border shadow-sm">
           <h3 className="text-sm font-semibold text-gray-700 mb-3">Ātrās darbības</h3>
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
             <button
-              onClick={() => setShowPreview(!showPreview)}
+              onClick={() => { setShowPreview(false); setShowAI(false); }}
               className="flex-1 py-2 px-3 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
             >
-              {showPreview ? 'Atvērt redaktoru' : 'Skatīt priekšskatījumu'}
+              Atvērt redaktoru
+            </button>
+            <button
+              onClick={() => { setShowPreview(true); setShowAI(false); }}
+              className="flex-1 py-2 px-3 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+            >
+              Skatīt priekšskatījumu
+            </button>
+            <button
+              onClick={() => { setShowPreview(false); setShowAI(true); }}
+              className="flex-1 py-2 px-3 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
+            >
+              AI Asistents
             </button>
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
