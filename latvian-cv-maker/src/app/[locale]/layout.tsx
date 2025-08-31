@@ -20,8 +20,7 @@ export default async function LocaleLayout({
     notFound();
   }
 
-  // Providing all messages to the client
-  // side is the easiest way to get started
+  // Get messages for the current locale
   const messages = await getMessages();
 
   return (
