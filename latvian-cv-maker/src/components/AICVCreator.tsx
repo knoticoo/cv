@@ -95,8 +95,10 @@ export default function AICVCreator({ onCVGenerated, onClose }: AICVCreatorProps
             id: generateId(),
             company: 'Uzņēmums',
             position: formData.jobTitle || 'Programmētājs',
+            location: 'Rīga, Latvija',
             startDate: '2020-01',
             endDate: 'present',
+            current: true,
             description: formData.experience,
             achievements: ['Projekta vadība', 'Komandas vadība', 'Tehnoloģiju ieviešana']
           }
@@ -106,9 +108,10 @@ export default function AICVCreator({ onCVGenerated, onClose }: AICVCreatorProps
             id: generateId(),
             institution: 'Universitāte',
             degree: formData.education,
-            field: 'Datorzinātnes',
+            location: 'Rīga, Latvija',
             startDate: '2016-09',
             endDate: '2020-06',
+            current: false,
             description: 'Bakalaura grāds datorzinātnēs'
           }
         ] : [],
@@ -116,25 +119,27 @@ export default function AICVCreator({ onCVGenerated, onClose }: AICVCreatorProps
           {
             id: generateId(),
             language: 'Latviešu',
-            proficiency: 'C2',
-            level: 'Native'
+            proficiency: 'C2'
           },
           {
             id: generateId(),
             language: 'Angļu',
-            proficiency: 'B2',
-            level: 'Intermediate'
+            proficiency: 'B2'
           }
         ] : [],
         itSkills: formData.skills ? [
           {
             id: generateId(),
-            skill: 'Programmēšana',
+            name: 'Programmēšana',
             proficiency: 'Advanced',
-            category: 'Technical'
+            category: 'Programming'
           }
         ] : [],
-        skills: formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean) : [],
+        skills: formData.skills ? formData.skills.split(',').map(s => s.trim()).filter(Boolean).map(skill => ({
+          id: generateId(),
+          name: skill,
+          category: 'Technical'
+        })) : [],
         references: [],
         createdAt: now,
         updatedAt: now,
