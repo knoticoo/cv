@@ -93,71 +93,7 @@ check_dependencies() {
     print_success "Dependencies checked"
 }
 
-# Function to check AI service status
-check_ai_service() {
-    print_status "Checking AI service status..."
-    
-    if command -v ollama >/dev/null 2>&1; then
-        if curl -s http://localhost:11434/api/version >/dev/null 2>&1; then
-            print_success "AI service (Ollama) is running"
-            return 0
-        else
-            print_warning "AI service (Ollama) is installed but not running"
-            return 1
-        fi
-    else
-        print_warning "AI service (Ollama) is not installed"
-        print_status "Run './scripts/setup-ai.sh' to install AI capabilities"
-        return 1
-    fi
-}
 
-# Function to start AI service
-start_ai_service() {
-    print_status "Starting AI service..."
-    
-    if command -v ollama >/dev/null 2>&1; then
-        if systemctl is-active --quiet ollama 2>/dev/null; then
-            print_success "AI service already running via systemd"
-        else
-            # Try to start via systemd first
-            if systemctl start ollama 2>/dev/null; then
-                print_success "AI service started via systemd"
-            else
-                # Fallback to direct start
-                print_status "Starting AI service directly..."
-                nohup ollama serve >/dev/null 2>&1 &
-                sleep 3
-                if curl -s http://localhost:11434/api/version >/dev/null 2>&1; then
-                    print_success "AI service started directly"
-                else
-                    print_warning "AI service may not be running properly"
-                fi
-            fi
-        fi
-    else
-        print_warning "AI service not available - install with './scripts/setup-ai.sh'"
-    fi
-}
-
-# Function to stop AI service
-stop_ai_service() {
-    print_status "Stopping AI service..."
-    
-    if command -v ollama >/dev/null 2>&1; then
-        if systemctl is-active --quiet ollama 2>/dev/null; then
-            if systemctl stop ollama 2>/dev/null; then
-                print_success "AI service stopped via systemd"
-            else
-                print_warning "Failed to stop AI service via systemd"
-            fi
-        else
-            # Kill direct processes
-            pkill -f "ollama serve" 2>/dev/null || true
-            print_success "AI service stopped"
-        fi
-    fi
-}
 
 # Function to start the development server
 start_dev_server() {
@@ -206,11 +142,7 @@ show_status() {
     echo -e "  📝 Logs: ./start.sh --logs"
     echo -e "  🛑 Stop: ./start.sh --kill"
     echo ""
-    echo -e "${YELLOW}AI Assistant:${NC}"
-    echo -e "  🤖 AI Status: ./start.sh --ai-status"
-    echo -e "  🚀 Start AI: ./start.sh --ai-start"
-    echo -e "  ⏹️  Stop AI: ./start.sh --ai-stop"
-    echo ""
+
 }
 
 # Function to show help
@@ -218,7 +150,7 @@ show_help() {
     echo ""
     echo -e "${PURPLE}🇱🇻 Latvian CV Maker - Start Script${NC}"
     echo ""
-    echo "This script manages the CV maker application and AI service."
+    echo "This script manages the CV maker application."
     echo ""
     echo -e "${YELLOW}Usage:${NC}"
     echo "  ./start.sh [OPTIONS]"
@@ -229,16 +161,14 @@ show_help() {
     echo "  -s, --status        Check if CV Maker is running"
     echo "  -k, --kill          Stop the CV Maker service"
     echo "  -l, --logs          Attach to tmux session to view logs"
-    echo "  --ai-status         Check AI service status"
-    echo "  --ai-start          Start AI service"
-    echo "  --ai-stop           Stop AI service"
+
     echo ""
     echo -e "${YELLOW}Examples:${NC}"
     echo "  ./start.sh                    # Start on default port 3002"
     echo "  ./start.sh -p 3005           # Start on port 3005"
     echo "  ./start.sh --status          # Check if running"
     echo "  ./start.sh --kill            # Stop the service"
-    echo "  ./start.sh --ai-status       # Check AI service"
+
     echo ""
 }
 
@@ -278,18 +208,7 @@ while [[ $# -gt 0 ]]; do
             fi
             exit 0
             ;;
-        --ai-status)
-            check_ai_service
-            exit 0
-            ;;
-        --ai-start)
-            start_ai_service
-            exit 0
-            ;;
-        --ai-stop)
-            stop_ai_service
-            exit 0
-            ;;
+
         *)
             print_error "Unknown option: $1"
             show_help
@@ -325,8 +244,7 @@ main() {
     # Check dependencies
     check_dependencies
     
-    # Check AI service
-    check_ai_service
+
     
     # Start the development server
     if start_dev_server $AVAILABLE_PORT; then
@@ -339,7 +257,7 @@ main() {
         
         print_status "To view logs, run: tmux attach -t $SESSION_NAME"
         print_status "To stop the server, run: ./start.sh --kill"
-        print_status "To manage AI service, run: ./start.sh --help"
+
     else
         print_error "Failed to start CV Maker"
         exit 1

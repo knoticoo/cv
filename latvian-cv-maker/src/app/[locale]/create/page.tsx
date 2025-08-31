@@ -8,10 +8,9 @@ import { generateId } from '@/lib/utils';
 import { storage, useAutoSave } from '@/lib/storage';
 import CVEditor from '@/components/CVEditor';
 import CVPreview from '@/components/CVPreview';
-import AICVAssistant from '@/components/AICVAssistant';
-import AICVCreator from '@/components/AICVCreator';
+
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Sparkles } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 export default function CreateCVPage() {
   const t = useTranslations('navigation');
@@ -19,8 +18,7 @@ export default function CreateCVPage() {
   
   const [cvData, setCVData] = useState<CVData | null>(null);
   const [showPreview, setShowPreview] = useState(false);
-  const [showAI, setShowAI] = useState(false);
-  const [showAICreator, setShowAICreator] = useState(false);
+
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   
@@ -92,14 +90,7 @@ export default function CreateCVPage() {
     triggerAutoSave();
   };
 
-  const handleAICVGenerated = (newCVData: CVData) => {
-    setCVData(newCVData);
-    setShowAICreator(false);
-    setShowAI(false);
-    setShowPreview(false);
-    // Save the generated CV
-    storage.saveCV(newCVData);
-  };
+
 
   // Show loading state while initializing
   if (!cvData) {
@@ -131,22 +122,7 @@ export default function CreateCVPage() {
             </div>
           )}
           
-          {/* AI CV Creator Button - Prominent */}
-          {!isEditing && (
-            <div className="mb-6 text-center">
-              <Button 
-                onClick={() => setShowAICreator(true)}
-                size="lg"
-                className="bg-gradient-to-r from-latvian-red to-red-600 hover:from-latvian-red/90 hover:to-red-600/90 text-white shadow-lg shadow-primary/25 px-8 py-4 text-lg font-semibold"
-              >
-                <Sparkles className="w-6 h-6 mr-3" />
-                🚀 Izveidot CV ar AI - Automātiski!
-              </Button>
-              <p className="text-sm text-muted-foreground mt-2">
-                AI ģenerēs profesionālu CV balstoties uz jūsu ievadīto informāciju
-              </p>
-            </div>
-          )}
+
 
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2 text-center sm:text-left">
             {isEditing ? 'Rediģēt CV' : t('createCV')}
@@ -162,9 +138,9 @@ export default function CreateCVPage() {
         {/* Mobile Toggle Buttons */}
         <div className="flex lg:hidden gap-2 mb-4 sm:mb-6">
           <button
-            onClick={() => { setShowPreview(false); setShowAI(false); }}
+            onClick={() => { setShowPreview(false); }}
             className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
-              !showPreview && !showAI
+              !showPreview
                 ? 'bg-primary text-white shadow-lg shadow-primary/25' 
                 : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
             }`}
@@ -172,29 +148,20 @@ export default function CreateCVPage() {
             ✏️ Redaktors
           </button>
           <button
-            onClick={() => { setShowPreview(true); setShowAI(false); }}
+            onClick={() => { setShowPreview(true); }}
             className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
-              showPreview && !showAI
+              showPreview
                 ? 'bg-primary text-white shadow-lg shadow-primary/25' 
                 : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
             }`}
           >
             👁️ Priekšskatījums
           </button>
-          <button
-            onClick={() => { setShowPreview(false); setShowAI(true); }}
-            className={`flex-1 py-3 px-4 rounded-lg font-medium transition-all duration-200 text-sm ${
-              showAI
-                ? 'bg-primary text-white shadow-lg shadow-primary/25' 
-                : 'bg-white text-gray-600 border border-gray-200 hover:bg-gray-50'
-            }`}
-          >
-            🤖 AI Asistents
-          </button>
+
         </div>
 
         {/* Desktop Layout */}
-        <div className="hidden lg:grid lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="hidden lg:grid lg:grid-cols-2 gap-6 lg:gap-8">
           {/* Editor Panel */}
           <div className="space-y-6">
             <CVEditor 
@@ -208,28 +175,21 @@ export default function CreateCVPage() {
             <CVPreview cvData={cvData} onUpdate={updateCVData} />
           </div>
 
-          {/* AI Assistant Panel */}
-          <div className="lg:sticky lg:top-8">
-            <AICVAssistant cvData={cvData} onCVUpdate={updateCVData} />
-          </div>
+
         </div>
 
         {/* Mobile Layout */}
         <div className="lg:hidden">
-          {!showPreview && !showAI ? (
+          {!showPreview ? (
             <div className="animate-fade-in">
               <CVEditor 
                 cvData={cvData} 
                 onUpdate={updateCVData}
               />
             </div>
-          ) : showPreview ? (
-            <div className="animate-fade-in">
-              <CVPreview cvData={cvData} onUpdate={updateCVData} />
-            </div>
           ) : (
             <div className="animate-fade-in">
-              <AICVAssistant cvData={cvData} onCVUpdate={updateCVData} />
+              <CVPreview cvData={cvData} onUpdate={updateCVData} />
             </div>
           )}
         </div>
@@ -239,23 +199,18 @@ export default function CreateCVPage() {
           <h3 className="text-sm font-semibold text-gray-700 mb-3">Ātrās darbības</h3>
           <div className="flex gap-2 flex-wrap">
             <button
-              onClick={() => { setShowPreview(false); setShowAI(false); }}
+              onClick={() => { setShowPreview(false); }}
               className="flex-1 py-2 px-3 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
             >
               Atvērt redaktoru
             </button>
             <button
-              onClick={() => { setShowPreview(true); setShowAI(false); }}
+              onClick={() => { setShowPreview(true); }}
               className="flex-1 py-2 px-3 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
             >
               Skatīt priekšskatījumu
             </button>
-            <button
-              onClick={() => { setShowPreview(false); setShowAI(true); }}
-              className="flex-1 py-2 px-3 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
-            >
-              AI Asistents
-            </button>
+
             <button
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="py-2 px-3 text-xs bg-gray-100 text-gray-700 rounded-md hover:bg-gray-200 transition-colors"
@@ -266,17 +221,7 @@ export default function CreateCVPage() {
         </div>
       </div>
 
-      {/* AI CV Creator Modal */}
-      {showAICreator && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-            <AICVCreator 
-              onCVGenerated={handleAICVGenerated}
-              onClose={() => setShowAICreator(false)}
-            />
-          </div>
-        </div>
-      )}
+
     </div>
   );
 }

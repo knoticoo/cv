@@ -72,7 +72,7 @@
 ### Additional Features
 - 🔄 **Cover Letter Builder** - Matching templates with CV
 - 🔄 **Advanced Privacy Controls** - Sharing and visibility settings
-- 🔄 **Content Suggestions** - AI-powered writing assistance
+
 - 🔄 **ATS Optimization** - Applicant tracking system friendly formats
 
 ## 📅 PLANNED FEATURES
@@ -80,7 +80,7 @@
 ### Integration
 - 📋 **CV.lv Integration** - Direct job application
 - 📋 **Visidarbi.lv Integration** - Local job portal connection
-- 📋 **Job Matching** - AI-powered job recommendations
+
 
 ### Advanced Tools
 - 📋 **Multiple CV Versions** - Different CVs for different roles
