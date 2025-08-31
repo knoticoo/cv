@@ -11,43 +11,48 @@ import CVPreview from '@/components/CVPreview';
 export default function CreateCVPage() {
   const t = useTranslations();
   
-  const [cvData, setCVData] = useState<CVData>({
-    id: generateId(),
-    personalInfo: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      address: {
-        street: '',
-        city: '',
-        postalCode: '',
-        country: 'Latvija'
-      }
-    },
-    workExperience: [],
-    education: [],
-    languageSkills: [],
-    itSkills: [],
-    skills: [],
-    references: [],
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    template: 'modern',
-    language: 'lv'
-  });
-
+  const [cvData, setCVData] = useState<CVData | null>(null);
   const { triggerAutoSave } = useAutoSave(cvData);
 
-  // Load saved CV on mount
+  // Initialize CV data on mount to avoid SSR/client mismatches
   useEffect(() => {
     const savedCV = storage.loadCV();
     if (savedCV) {
       setCVData(savedCV);
+    } else {
+      // Create initial CV data only on client side
+      const now = new Date().toISOString();
+      setCVData({
+        id: generateId(),
+        personalInfo: {
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+          address: {
+            street: '',
+            city: '',
+            postalCode: '',
+            country: 'Latvija'
+          }
+        },
+        workExperience: [],
+        education: [],
+        languageSkills: [],
+        itSkills: [],
+        skills: [],
+        references: [],
+        createdAt: now,
+        updatedAt: now,
+        template: 'modern',
+        language: 'lv'
+      });
     }
   }, []);
 
   const updateCVData = (updates: Partial<CVData>) => {
+    if (!cvData) return;
+    
     const newData = {
       ...cvData,
       ...updates,
@@ -56,6 +61,18 @@ export default function CreateCVPage() {
     setCVData(newData);
     triggerAutoSave();
   };
+
+  // Show loading state while initializing
+  if (!cvData) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading CV editor...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">

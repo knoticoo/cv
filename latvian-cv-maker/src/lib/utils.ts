@@ -9,16 +9,29 @@ export function formatDate(date: string, locale: string = 'lv'): string {
   if (!date) return '';
   
   const dateObj = new Date(date);
-  const options: Intl.DateTimeFormatOptions = { 
-    year: 'numeric', 
-    month: 'long' 
+  
+  // Use a more deterministic approach for SSR compatibility
+  const year = dateObj.getFullYear();
+  const month = dateObj.getMonth();
+  
+  // Map month numbers to names to avoid locale-specific formatting
+  const monthNames: Record<string, Record<number, string>> = {
+    lv: ['janvāris', 'februāris', 'marts', 'aprīlis', 'maijs', 'jūnijs', 'jūlijs', 'augusts', 'septembris', 'oktobris', 'novembris', 'decembris'],
+    ru: ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь'],
+    en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
   };
   
-  return dateObj.toLocaleDateString(locale, options);
+  const monthName = monthNames[locale]?.[month] || monthNames.en[month];
+  return `${monthName} ${year}`;
 }
 
+let idCounter = 0;
+
 export function generateId(): string {
-  return Math.random().toString(36).substr(2, 9);
+  // Use a counter-based approach for SSR compatibility
+  // This ensures the same ID is generated on both server and client
+  idCounter += 1;
+  return `id-${idCounter}`;
 }
 
 export function validateEmail(email: string): boolean {
