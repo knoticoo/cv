@@ -91,7 +91,7 @@ export default function CVPreview({ cvData, onUpdate }: CVPreviewProps) {
 
       {/* Footer */}
       <div className="p-4 border-t bg-gray-50 text-center text-sm text-gray-500">
-        Izveidots ar Latvian CV Maker • {new Date().getFullYear()}
+        Izveidots ar Latvian CV Maker • 2024
       </div>
     </div>
   );
