@@ -206,8 +206,5 @@ export const getPremiumFeaturesByCategory = (category: keyof typeof premiumFeatu
 };
 
 export const getAllPremiumFeatures = () => {
-  return Object.entries(premiumFeatures).reduce((acc, [category, features]) => {
-    acc[category] = features;
-    return acc;
-  }, {} as typeof premiumFeatures);
+  return premiumFeatures;
 };

@@ -23,6 +23,52 @@
     "coverLetter": "Cover Letter",
     "help": "Help"
   },
+  "homepage": {
+    "hero": {
+      "title": "Professional CV Maker",
+      "subtitle": "for the Latvian Market",
+      "description": "Create an outstanding CV in minutes. Multi-language support, Europass compatibility and optimization for Latvian employers.",
+      "startButton": "Start Creating CV",
+      "templatesButton": "View Templates"
+    },
+    "features": {
+      "title": "Why choose our CV maker?",
+      "subtitle": "We've built this tool specifically for the Latvian job market, taking into account local standards and requirements.",
+      "multilingual": {
+        "title": "Multilingual Support",
+        "description": "Create CVs in Latvian, Russian and English"
+      },
+      "europass": {
+        "title": "Europass Compatibility",
+        "description": "Professional templates that meet EU standards"
+      },
+      "security": {
+        "title": "Data Security",
+        "description": "Your personal information is safely protected"
+      },
+      "fast": {
+        "title": "Fast and Simple",
+        "description": "Create CV in minutes with our intuitive editor"
+      },
+      "employer": {
+        "title": "Employer Preferred",
+        "description": "Optimized for Latvian job market and ATS systems"
+      },
+      "formats": {
+        "title": "Multiple Formats",
+        "description": "Export as PDF, Word or text format"
+      }
+    },
+    "cta": {
+      "title": "Ready to start?",
+      "description": "Join thousands of users who have already created their professional CVs with our help.",
+      "button": "Create CV Now"
+    },
+    "footer": {
+      "copyright": "© 2024 Latvian CV Maker. All rights reserved.",
+      "madeWith": "Made with ❤️ for Latvian job seekers"
+    }
+  },
   "personalInfo": {
     "title": "Personal Information",
     "firstName": "First Name",

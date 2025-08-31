@@ -184,6 +184,11 @@ export const useAutoSave = (cvData: CVData, delay: number = 2000) => {
   const [saveTimeout, setSaveTimeout] = useState<NodeJS.Timeout | null>(null);
 
   const triggerAutoSave = () => {
+    // Don't save if cvData is empty or incomplete
+    if (!cvData || !cvData.id || !cvData.personalInfo?.firstName) {
+      return;
+    }
+
     if (saveTimeout) {
       clearTimeout(saveTimeout);
     }
