@@ -80,7 +80,7 @@ export default function CreateCVPage() {
 
           {/* Preview Panel */}
           <div className="lg:sticky lg:top-8">
-            <CVPreview cvData={cvData} />
+            <CVPreview cvData={cvData} onUpdate={updateCVData} />
           </div>
         </div>
       </div>
