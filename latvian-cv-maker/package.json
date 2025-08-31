@@ -19,7 +19,15 @@
     "clean": "rm -rf .next node_modules/.cache",
     "reset": "npm run clean && npm install",
     "export": "next build && next export",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "ai:setup": "./scripts/setup-ai.sh",
+    "ai:setup:prod": "./scripts/setup-ai.sh --service",
+    "ai:setup:test": "./scripts/setup-ai.sh --test",
+    "ai:status": "./start.sh --ai-status",
+    "ai:start": "./start.sh --ai-start",
+    "ai:stop": "./start.sh --ai-stop",
+    "ai:prod:status": "./scripts/start-prod.sh --ai-status",
+    "ai:prod:start": "./scripts/start-prod.sh --ai-start"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
