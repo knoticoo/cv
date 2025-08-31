@@ -271,7 +271,7 @@ ${conversationContext}
 
 User's Latest Message: ${userMessage}
 
-Ask about skills in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English' : 'English'}.
+Ask about skills in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'}.
 Examples: "What are your main skills?" or "What technical skills do you have?"
 `;
     } else if (conversationStage === 'skills') {
@@ -283,7 +283,7 @@ ${conversationContext}
 
 User's Latest Message: ${userMessage}
 
-Ask about languages in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English' : 'English'}.
+Ask about languages in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'}.
 Examples: "What languages do you speak?" or "What is your native language?"
 `;
     } else if (conversationStage === 'languages') {
@@ -295,7 +295,7 @@ ${conversationContext}
 
 User's Latest Message: ${userMessage}
 
-Provide a CV summary in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English' : 'English'} and ask if they want to add more information or proceed to generate the CV.
+Provide a CV summary in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'} and ask if they want to add more information or proceed to generate the CV.
 
 Format: Start with "CV Summary:" then provide a brief summary of what you've gathered, then ask if they want to add more or generate the CV.
 `;
@@ -308,7 +308,7 @@ ${conversationContext}
 
 User's Latest Message: ${userMessage}
 
-Generate a complete, professional CV in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English' : 'English'} based on all the information gathered.
+Generate a complete, professional CV in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'} based on all the information gathered.
 
 Include all sections: Personal Info, Summary, Experience, Education, Skills, Languages.
 `;
@@ -327,7 +327,7 @@ Please:
 1. Ask relevant follow-up questions to gather necessary information
 2. Provide helpful guidance about CV creation
 3. When you have enough information, provide a CV summary
-4. Respond in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English' : 'English'}
+4. Respond in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'}
 
 Be conversational and helpful. Ask one question at a time to avoid overwhelming the user.
 `;
