@@ -13,7 +13,7 @@ export default function HomePage() {
       description: "Izveidojiet CV latviešu, krievu un angļu valodās"
     },
     {
-      icon: Template,
+      icon: Layout,
       title: "Europass saderība",
       description: "Profesionālas veidnes, kas atbilst ES standartiem"
     },
