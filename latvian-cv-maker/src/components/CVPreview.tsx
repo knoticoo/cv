@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { CVData } from '@/types/cv';
 import { Button } from '@/components/ui/button';
-import { Print, Share2, Eye, Palette } from 'lucide-react';
+import { Printer, Share2, Eye, Palette } from 'lucide-react';
 import PDFDownloadButton from './PDFDownloadButton';
 import TemplateRenderer from './TemplateRenderer';
 import TemplateSelector from './TemplateSelector';
@@ -55,7 +55,7 @@ export default function CVPreview({ cvData, onUpdate }: CVPreviewProps) {
               <Palette className="w-4 h-4" />
             </Button>
             <Button variant="outline" size="sm" onClick={handlePrint}>
-              <Print className="w-4 h-4" />
+              <Printer className="w-4 h-4" />
             </Button>
             <Button variant="outline" size="sm" onClick={handleShare}>
               <Share2 className="w-4 h-4" />
