@@ -9,7 +9,7 @@ import CVEditor from '@/components/CVEditor';
 import CVPreview from '@/components/CVPreview';
 
 export default function CreateCVPage() {
-  const t = useTranslations();
+  const t = useTranslations('navigation');
   
   const [cvData, setCVData] = useState<CVData | null>(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -80,7 +80,7 @@ export default function CreateCVPage() {
       <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-6 lg:py-8">
         <div className="mb-4 sm:mb-6 lg:mb-8">
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2 text-center sm:text-left">
-            {t('navigation.createCV')}
+            {t('createCV')}
           </h1>
           <p className="text-xs sm:text-sm lg:text-base text-muted-foreground text-center sm:text-left">
             Izveidojiet savu profesionālo CV, izmantojot mūsu interaktīvo redaktoru

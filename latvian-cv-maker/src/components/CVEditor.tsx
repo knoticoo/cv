@@ -19,13 +19,18 @@ interface CVEditorProps {
 }
 
 export default function CVEditor({ cvData, onUpdate }: CVEditorProps) {
-  const t = useTranslations();
+  const tPersonalInfo = useTranslations('personalInfo');
+  const tWorkExperience = useTranslations('workExperience');
+  const tEducation = useTranslations('education');
+  const tSkills = useTranslations('skills');
+  const tReferences = useTranslations('references');
+  const tCommon = useTranslations('common');
   const [activeTab, setActiveTab] = useState('personal');
 
   const tabs = [
     {
       id: 'personal',
-      label: t('personalInfo.title'),
+      label: tPersonalInfo('title'),
       icon: User,
       component: PersonalInfoForm
     },
@@ -37,25 +42,25 @@ export default function CVEditor({ cvData, onUpdate }: CVEditorProps) {
     },
     {
       id: 'experience',
-      label: t('workExperience.title'),
+      label: tWorkExperience('title'),
       icon: Briefcase,
       component: WorkExperienceForm
     },
     {
       id: 'education',
-      label: t('education.title'),
+      label: tEducation('title'),
       icon: GraduationCap,
       component: EducationForm
     },
     {
       id: 'skills',
-      label: t('skills.title'),
+      label: tSkills('title'),
       icon: Star,
       component: SkillsForm
     },
     {
       id: 'references',
-      label: t('references.title'),
+      label: tReferences('title'),
       icon: Users,
       component: ReferencesForm
     }
@@ -161,7 +166,7 @@ export default function CVEditor({ cvData, onUpdate }: CVEditorProps) {
           className="flex items-center gap-2"
         >
           <ChevronLeft className="w-4 h-4" />
-          {t('common.previous')}
+          {tCommon('previous')}
         </Button>
         
         <Button
@@ -169,7 +174,7 @@ export default function CVEditor({ cvData, onUpdate }: CVEditorProps) {
           disabled={!canGoNext}
           className="flex items-center gap-2"
         >
-          {t('common.next')}
+          {tCommon('next')}
           <ChevronRight className="w-4 h-4" />
         </Button>
       </div>
