@@ -35,7 +35,11 @@ export default function AICVAssistant({ cvData, onCVUpdate }: AICVAssistantProps
     {
       id: '1',
       type: 'ai',
-      content: 'Sveiki! Es esmu jūsu AI CV palīgs. Es palīdzēšu jums izveidot profesionālu CV. Sāksim ar pamatinformāciju - kādu amatu jūs meklējat?',
+      content: selectedLanguage === 'lv' 
+        ? 'Sveiki! 👋 Es esmu jūsu AI CV palīgs. Es palīdzēšu jums izveidot profesionālu CV. Sāksim ar pamatinformāciju - kādu amatu jūs meklējat?'
+        : selectedLanguage === 'ru'
+        ? 'Привет! 👋 Я ваш AI помощник по созданию CV. Я помогу вам создать профессиональное резюме. Начнем с основной информации - какую должность вы ищете?'
+        : 'Hello! 👋 I\'m your AI CV assistant. I\'ll help you create a professional CV. Let\'s start with basic information - what job position are you looking for?',
       timestamp: new Date()
     }
   ]);
@@ -47,6 +51,26 @@ export default function AICVAssistant({ cvData, onCVUpdate }: AICVAssistantProps
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+
+  // Update greeting message when language changes
+  useEffect(() => {
+    if (messages.length === 1 && messages[0].type === 'ai') {
+      const newGreeting = selectedLanguage === 'lv' 
+        ? 'Sveiki! 👋 Es esmu jūsu AI CV palīgs. Es palīdzēšu jums izveidot profesionālu CV. Sāksim ar pamatinformāciju - kādu amatu jūs meklējat?'
+        : selectedLanguage === 'ru'
+        ? 'Привет! 👋 Я ваш AI помощник по созданию CV. Я помогу вам создать профессиональное резюме. Начнем с основной информации - какую должность вы ищете?'
+        : 'Hello! 👋 I\'m your AI CV assistant. I\'ll help you create a professional CV. Let\'s start with basic information - what job position are you looking for?';
+      
+      setMessages([
+        {
+          id: '1',
+          type: 'ai',
+          content: newGreeting,
+          timestamp: new Date()
+        }
+      ]);
+    }
+  }, [selectedLanguage]);
 
   // Check AI service health on mount
   const checkServiceHealth = useCallback(async () => {
@@ -146,7 +170,11 @@ export default function AICVAssistant({ cvData, onCVUpdate }: AICVAssistantProps
       {
         id: '1',
         type: 'ai',
-        content: 'Sveiki! Es esmu jūsu AI CV palīgs. Es palīdzēšu jums izveidot profesionālu CV. Sāksim ar pamatinformāciju - kādu amatu jūs meklējat?',
+        content: selectedLanguage === 'lv' 
+          ? 'Sveiki! 👋 Es esmu jūsu AI CV palīgs. Es palīdzēšu jums izveidot profesionālu CV. Sāksim ar pamatinformāciju - kādu amatu jūs meklējat?'
+          : selectedLanguage === 'ru'
+          ? 'Привет! 👋 Я ваш AI помощник по созданию CV. Я помогу вам создать профессиональное резюме. Начнем с основной информации - какую должность вы ищете?'
+          : 'Hello! 👋 I\'m your AI CV assistant. I\'ll help you create a professional CV. Let\'s start with basic information - what job position are you looking for?',
         timestamp: new Date()
       }
     ]);
