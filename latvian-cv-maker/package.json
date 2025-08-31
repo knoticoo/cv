@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack -p ${PORT:-3002}",
+    "dev": "next dev -p ${PORT:-3002}",
     "dev:custom": "./scripts/dev.sh",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start -p ${PORT:-3002}",
     "start:tmux": "./start.sh",
     "stop": "./start.sh --kill",
