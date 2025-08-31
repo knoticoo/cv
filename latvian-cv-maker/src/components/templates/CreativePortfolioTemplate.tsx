@@ -347,7 +347,7 @@ export default function CreativePortfolioTemplate({ cvData, locale }: CreativePo
               </div>
             )}
           </div>
-        }
+        )}
 
         {/* References as Team Cards */}
         {cvData.references.length > 0 && (
