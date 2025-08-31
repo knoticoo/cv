@@ -173,5 +173,65 @@
     "workExperience": "Aprakstiet savus sasniegumus ar konkrētiem piemēriem un skaitļiem.",
     "education": "Iekļaujiet tikai relevantu izglītību, kas saistīta ar vēlamo amatu.",
     "skills": "Norādiet tikai tās prasmes, kuras varat pierādīt ar pieredzi vai sertifikātiem."
+  },
+  "profile": {
+    "title": "Mans Profils",
+    "subtitle": "Pārvaldiet savus saglabātos CV un izveidojiet jaunus",
+    "loading": "Ielādē profila...",
+    "createNew": "Izveidot jaunu CV",
+    "createFirst": "Izveidot pirmo CV",
+    "noSavedCVs": "Nav saglabātu CV",
+    "noSavedCVsDesc": "Jums vēl nav izveidots neviens CV. Sāciet ar jauna CV izveidi!",
+    "workExperience": "Darba pieredze",
+    "education": "Izglītība",
+    "skills": "Prasmes",
+    "languages": "Valodas",
+    "lastUpdated": "Pēdējoreiz atjaunināts",
+    "view": "Skatīt",
+    "edit": "Rediģēt",
+    "download": "Lejupielādēt",
+    "delete": "Dzēst",
+    "deleteConfirm": "Vai tiešām vēlaties dzēst šo CV?",
+    "summary": "Kopsavilkums",
+    "totalCVs": "Kopā CV",
+    "inLatvian": "Latviešu valodā",
+    "inEnglish": "Angļu valodā",
+    "inRussian": "Krievu valodā",
+    "logout": "Iziet"
+  },
+  "help": {
+    "title": "Palīdzība un atbalsts",
+    "subtitle": "Viss, kas nepieciešams ideāla CV izveidei",
+    "gettingStarted": {
+      "title": "Sākums",
+      "description": "Iemācieties pamatus pirmā CV izveidei"
+    },
+    "templates": {
+      "title": "Veidnes",
+      "description": "Izvēlieties pareizo veidni savai nozarei"
+    },
+    "export": {
+      "title": "Eksports un lejupielāde",
+      "description": "Saglabājiet un dalieties ar CV dažādos formātos"
+    },
+    "tips": {
+      "title": "CV rakstīšanas padomi",
+      "description": "Profesionāli padomi izcilu CV izveidei"
+    },
+    "faq": {
+      "title": "Biežāk uzdotie jautājumi",
+      "description": "Ātri atbildes uz biežiem jautājumiem"
+    },
+    "contact": {
+      "title": "Sazināties ar atbalstu",
+      "description": "Saņemiet palīdzību, kad tā nepieciešama"
+    }
+  },
+  "auth": {
+    "login": "Ielogoties",
+    "register": "Reģistrēties"
+  },
+  "premium": {
+    "title": "Premium"
   }
 }

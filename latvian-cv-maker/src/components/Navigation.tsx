@@ -29,9 +29,9 @@ export default function Navigation() {
   const navItems = [
     { href: '/', label: t('home'), icon: FileText },
     { href: '/create', label: t('createCV'), icon: User },
-    ...(user ? [{ href: '/profile', label: 'Mans Profils', icon: UserCircle }] : []),
+    ...(user ? [{ href: '/profile', label: t('profile.title'), icon: UserCircle }] : []),
     { href: '/templates', label: t('templates'), icon: Layout },
-    { href: '/premium', label: 'Premium', icon: Crown },
+    { href: '/premium', label: t('premium.title'), icon: Crown },
 
     { href: '/help', label: t('help'), icon: HelpCircle },
   ];
@@ -90,19 +90,19 @@ export default function Navigation() {
                   className="flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" />
-                  <span className="hidden sm:inline">Iziet</span>
+                  <span className="hidden sm:inline">{t('profile.logout')}</span>
                 </Button>
               </div>
             ) : (
               <div className="flex items-center gap-2">
                 <Link href="/auth/login">
                   <Button variant="ghost" size="sm">
-                    Ielogoties
+                    {t('auth.login')}
                   </Button>
                 </Link>
                 <Link href="/auth/register">
                   <Button size="sm">
-                    Reģistrēties
+                    {t('auth.register')}
                   </Button>
                 </Link>
               </div>
