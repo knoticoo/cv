@@ -24,6 +24,19 @@ export interface CVImprovementRequest {
   specificFeedback?: string;
 }
 
+export interface ConversationalRequest {
+  userMessage: string;
+  conversationHistory: Array<{ type: 'user' | 'ai'; content: string; timestamp: Date }>;
+  language: SupportedLanguage;
+  cvData?: CVData;
+}
+
+export interface CVFromConversationRequest {
+  conversationHistory: Array<{ type: 'user' | 'ai'; content: string; timestamp: Date }>;
+  summary: string;
+  language: SupportedLanguage;
+}
+
 class AIService {
   private baseUrl: string;
   private model: string;
@@ -197,6 +210,71 @@ Please provide:
 5. Skills prioritization based on job requirements
 
 Make the CV specifically relevant to this job opportunity.
+`;
+
+    const systemPrompt = AI_CONFIG.PROMPTS[language].system;
+    return this.makeRequest(prompt, systemPrompt);
+  }
+
+  async generateConversationalResponse(request: ConversationalRequest): Promise<AIResponse> {
+    const { userMessage, conversationHistory, language, cvData } = request;
+    
+    // Create a context-aware prompt based on conversation history
+    const conversationContext = conversationHistory
+      .slice(-6) // Last 6 messages for context
+      .map(msg => `${msg.type === 'user' ? 'User' : 'AI'}: ${msg.content}`)
+      .join('\n');
+    
+    const prompt = `
+Based on our conversation about creating a CV, please respond to the user's latest message.
+
+Conversation History:
+${conversationContext}
+
+User's Latest Message: ${userMessage}
+
+${cvData ? `Current CV Data: ${JSON.stringify(cvData, null, 2)}` : ''}
+
+Please:
+1. Ask relevant follow-up questions to gather necessary information
+2. Provide helpful guidance about CV creation
+3. When you have enough information, provide a CV summary
+4. Respond in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'}
+
+Be conversational and helpful. Ask one question at a time to avoid overwhelming the user.
+`;
+
+    const systemPrompt = AI_CONFIG.PROMPTS[language].system;
+    return this.makeRequest(prompt, systemPrompt);
+  }
+
+  async generateCVFromConversation(request: CVFromConversationRequest): Promise<AIResponse> {
+    const { conversationHistory, summary, language } = request;
+    
+    // Extract key information from conversation
+    const conversationText = conversationHistory
+      .map(msg => msg.content)
+      .join('\n');
+    
+    const prompt = `
+Based on our conversation and the CV summary, please generate a complete professional CV.
+
+Conversation Context:
+${conversationText}
+
+CV Summary:
+${summary}
+
+Please create a complete, professional CV in ${language === 'lv' ? 'Latvian' : language === 'ru' ? 'Russian' : 'English'} that includes:
+
+1. Professional Summary
+2. Work Experience (with achievements)
+3. Education
+4. Skills (both technical and soft skills)
+5. Languages
+6. Any additional relevant information
+
+Format the CV in a clear, professional structure that would be suitable for job applications.
 `;
 
     const systemPrompt = AI_CONFIG.PROMPTS[language].system;

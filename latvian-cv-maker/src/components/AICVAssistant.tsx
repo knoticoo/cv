@@ -1,16 +1,23 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { CVData } from '@/types/cv';
-import { aiService, AIResponse, CVGenerationRequest, CVImprovementRequest } from '@/lib/ai-service';
+import { aiService, AIResponse } from '@/lib/ai-service';
 import { AI_CONFIG, SupportedLanguage } from '@/lib/ai-config';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Sparkles, Wand2, Languages, FileText, Target, Zap } from 'lucide-react';
+import { Loader2, Sparkles, Send, User, Bot, CheckCircle, RefreshCw } from 'lucide-react';
+
+interface Message {
+  id: string;
+  type: 'user' | 'ai';
+  content: string;
+  timestamp: Date;
+}
 
 interface AICVAssistantProps {
   cvData?: CVData;
@@ -19,29 +26,27 @@ interface AICVAssistantProps {
 
 export default function AICVAssistant({ cvData, onCVUpdate }: AICVAssistantProps) {
   const t = useTranslations('ai');
+  const messagesEndRef = useRef<HTMLDivElement>(null);
   
   const [isLoading, setIsLoading] = useState(false);
-  const [aiResponse, setAiResponse] = useState<AIResponse | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>('lv');
   const [serviceStatus, setServiceStatus] = useState<'checking' | 'healthy' | 'unhealthy'>('checking');
-  
-  // CV Generation state
-  const [generationForm, setGenerationForm] = useState({
-    jobTitle: '',
-    experience: '',
-    education: '',
-    skills: '',
-    additionalInfo: '',
-  });
-  
-  // CV Improvement state
-  const [improvementForm, setImprovementForm] = useState({
-    improvementType: 'content' as const,
-    specificFeedback: '',
-  });
-  
-  // Job-specific CV state
-  const [jobDescription, setJobDescription] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState<SupportedLanguage>('lv');
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      id: '1',
+      type: 'ai',
+      content: 'Sveiki! Es esmu jūsu AI CV palīgs. Es palīdzēšu jums izveidot profesionālu CV. Sāksim ar pamatinformāciju - kādu amatu jūs meklējat?',
+      timestamp: new Date()
+    }
+  ]);
+  const [currentInput, setCurrentInput] = useState('');
+  const [cvSummary, setCvSummary] = useState<string | null>(null);
+  const [isGeneratingCV, setIsGeneratingCV] = useState(false);
+
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
   // Check AI service health on mount
   const checkServiceHealth = useCallback(async () => {
@@ -54,377 +59,304 @@ export default function AICVAssistant({ cvData, onCVUpdate }: AICVAssistantProps
     }
   }, []);
 
-  // Check health on mount
-  useState(() => {
+  useEffect(() => {
     checkServiceHealth();
-  });
+  }, [checkServiceHealth]);
+
+  const addMessage = (type: 'user' | 'ai', content: string) => {
+    const newMessage: Message = {
+      id: Date.now().toString(),
+      type,
+      content,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, newMessage]);
+  };
+
+  const handleSendMessage = async () => {
+    if (!currentInput.trim() || isLoading) return;
+
+    const userMessage = currentInput.trim();
+    setCurrentInput('');
+    addMessage('user', userMessage);
+    setIsLoading(true);
+
+    try {
+      // Generate AI response based on conversation context
+      const response = await aiService.generateConversationalResponse({
+        userMessage,
+        conversationHistory: messages,
+        language: selectedLanguage,
+        cvData
+      });
+
+      if (response.success && response.content) {
+        addMessage('ai', response.content);
+        
+        // Check if AI has enough information to generate CV summary
+        if (response.content.includes('CV kopsavilkums') || response.content.includes('CV summary')) {
+          setCvSummary(response.content);
+        }
+      } else {
+        addMessage('ai', 'Atvainojiet, radās kļūda. Lūdzu mēģiniet vēlreiz.');
+      }
+    } catch (error) {
+      addMessage('ai', 'Atvainojiet, radās kļūda. Lūdzu mēģiniet vēlreiz.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleGenerateCV = async () => {
-    if (!generationForm.jobTitle.trim()) {
-      setAiResponse({ success: false, error: 'Please provide a job title' });
-      return;
-    }
-
-    setIsLoading(true);
-    setAiResponse(null);
-
+    if (!cvSummary) return;
+    
+    setIsGeneratingCV(true);
     try {
-      const request: CVGenerationRequest = {
-        language: selectedLanguage,
-        jobTitle: generationForm.jobTitle,
-        experience: generationForm.experience,
-        education: generationForm.education,
-        skills: generationForm.skills.split(',').map(s => s.trim()).filter(Boolean),
-        additionalInfo: generationForm.additionalInfo,
-      };
+      // Extract CV data from the conversation and summary
+      const cvData = await aiService.generateCVFromConversation({
+        conversationHistory: messages,
+        summary: cvSummary,
+        language: selectedLanguage
+      });
 
-      const response = await aiService.generateProfessionalCV(request);
-      setAiResponse(response);
+      if (cvData.success && cvData.content) {
+        addMessage('ai', '🎉 Jūsu CV ir gatavs! Lūdzu pārskatiet to un apstipriniet, vai vēlaties to pievienot savam CV.');
+        
+        // Show the generated CV
+        const cvMessage: Message = {
+          id: Date.now().toString(),
+          type: 'ai',
+          content: `**Ģenerētais CV:**\n\n${cvData.content}`,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, cvMessage]);
+        
+        // Clear summary to allow new conversation
+        setCvSummary(null);
+      }
     } catch (error) {
-      setAiResponse({ success: false, error: 'Failed to generate CV' });
+      addMessage('ai', 'Atvainojiet, radās kļūda ģenerējot CV. Lūdzu mēģiniet vēlreiz.');
     } finally {
-      setIsLoading(false);
+      setIsGeneratingCV(false);
     }
   };
 
-  const handleImproveCV = async () => {
-    if (!cvData) {
-      setAiResponse({ success: false, error: 'No CV data available for improvement' });
-      return;
-    }
+  const handleReset = () => {
+    setMessages([
+      {
+        id: '1',
+        type: 'ai',
+        content: 'Sveiki! Es esmu jūsu AI CV palīgs. Es palīdzēšu jums izveidot profesionālu CV. Sāksim ar pamatinformāciju - kādu amatu jūs meklējat?',
+        timestamp: new Date()
+      }
+    ]);
+    setCvSummary(null);
+    setCurrentInput('');
+  };
 
-    setIsLoading(true);
-    setAiResponse(null);
-
-    try {
-      const request: CVImprovementRequest = {
-        cvData,
-        language: selectedLanguage,
-        improvementType: improvementForm.improvementType,
-        specificFeedback: improvementForm.specificFeedback,
-      };
-
-      const response = await aiService.improveCV(request);
-      setAiResponse(response);
-    } catch (error) {
-      setAiResponse({ success: false, error: 'Failed to improve CV' });
-    } finally {
-      setIsLoading(false);
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
     }
   };
 
-  const handleJobSpecificCV = async () => {
-    if (!jobDescription.trim()) {
-      setAiResponse({ success: false, error: 'Please provide a job description' });
-      return;
-    }
-
-    setIsLoading(true);
-    setAiResponse(null);
-
-    try {
-      const response = await aiService.generateJobSpecificCV(jobDescription, selectedLanguage);
-      setAiResponse(response);
-    } catch (error) {
-      setAiResponse({ success: false, error: 'Failed to generate job-specific CV' });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const getStatusColor = () => {
-    switch (serviceStatus) {
-      case 'healthy': return 'text-green-600';
-      case 'unhealthy': return 'text-red-600';
-      default: return 'text-yellow-600';
-    }
-  };
-
-  const getStatusIcon = () => {
-    switch (serviceStatus) {
-      case 'healthy': return '🟢';
-      case 'unhealthy': return '🔴';
-      default: return '🟡';
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      {/* Service Status */}
-      <Card>
+  if (serviceStatus === 'unhealthy') {
+    return (
+      <Card className="border-red-200 bg-red-50">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Zap className="h-5 w-5" />
-            AI Service Status
+          <CardTitle className="text-red-800 flex items-center gap-2">
+            <Bot className="h-5 w-5" />
+            AI Serviss Nav Pieejams
           </CardTitle>
+          <CardDescription className="text-red-700">
+            Lūdzu pārbaudiet, vai Ollama darbojas ar atbilstošu modeli
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-2">
-            <span className={getStatusColor()}>
-              {getStatusIcon()} {serviceStatus === 'checking' ? 'Checking...' : serviceStatus === 'healthy' ? 'Ready' : 'Unavailable'}
-            </span>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              onClick={checkServiceHealth}
-              disabled={serviceStatus === 'checking'}
-            >
-              Refresh
+          <div className="space-y-4">
+            <div className="text-sm text-red-700">
+              <p>Lai atrisinātu šo problēmu:</p>
+              <ul className="list-disc list-inside mt-2 space-y-1">
+                <li>Pārbaudiet, vai Ollama ir instalēts un darbojas</li>
+                <li>Pārbaudiet, vai ir pieejams viens no šiem modeļiem: llama2:3b, mistral:7b-instruct-q4_0, vai phi3:mini</li>
+                <li>Palaidiet komandu: <code className="bg-red-100 px-2 py-1 rounded">ollama serve</code></li>
+              </ul>
+            </div>
+            <Button onClick={checkServiceHealth} variant="outline" className="w-full">
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Pārbaudīt Vēlreiz
             </Button>
           </div>
-          {serviceStatus === 'unhealthy' && (
-            <p className="text-sm text-red-600 mt-2">
-              Please ensure Ollama is running with a compatible model (llama2:3b, mistral:7b-instruct-q4_0, or phi3:mini)
-            </p>
-          )}
         </CardContent>
       </Card>
+    );
+  }
 
+  return (
+    <div className="space-y-4">
       {/* Language Selection */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Languages className="h-5 w-5" />
-            Language Selection
+            <Sparkles className="h-5 w-5" />
+            AI CV Palīgs
           </CardTitle>
+          <CardDescription>
+            Sarunājieties ar AI, lai izveidotu profesionālu CV
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <Select value={selectedLanguage} onValueChange={(value: SupportedLanguage) => setSelectedLanguage(value)}>
-            <SelectTrigger>
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="lv">Latviešu (Latvian)</SelectItem>
-              <SelectItem value="ru">Русский (Russian)</SelectItem>
-              <SelectItem value="en">English</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex items-center gap-4">
+            <label className="text-sm font-medium">Valoda:</label>
+            <Select value={selectedLanguage} onValueChange={(value: SupportedLanguage) => setSelectedLanguage(value)}>
+              <SelectTrigger className="w-32">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="lv">Latviešu</SelectItem>
+                <SelectItem value="ru">Русский</SelectItem>
+                <SelectItem value="en">English</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button onClick={handleReset} variant="outline" size="sm">
+              <RefreshCw className="mr-2 h-4 w-4" />
+              Jauna Saruna
+            </Button>
+          </div>
         </CardContent>
       </Card>
 
-      {/* CV Generation */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5" />
-            Generate Professional CV
-          </CardTitle>
-          <CardDescription>
-            Create a complete professional CV from scratch using AI
-          </CardDescription>
+      {/* Chat Interface */}
+      <Card className="h-[600px] flex flex-col">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg">CV Saruna</CardTitle>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="text-sm font-medium">Job Title *</label>
-              <input
-                type="text"
-                value={generationForm.jobTitle}
-                onChange={(e) => setGenerationForm(prev => ({ ...prev, jobTitle: e.target.value }))}
-                placeholder="e.g., Software Developer"
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            <div>
-              <label className="text-sm font-medium">Experience Level</label>
-              <input
-                type="text"
-                value={generationForm.experience}
-                onChange={(e) => setGenerationForm(prev => ({ ...prev, experience: e.target.value }))}
-                placeholder="e.g., Entry level, Mid-level"
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-          </div>
-          
-          <div>
-            <label className="text-sm font-medium">Education</label>
-            <input
-              type="text"
-              value={generationForm.education}
-              onChange={(e) => setGenerationForm(prev => ({ ...prev, education: e.target.value }))}
-              placeholder="e.g., Bachelor's degree in Computer Science"
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          
-          <div>
-            <label className="text-sm font-medium">Skills (comma-separated)</label>
-            <input
-              type="text"
-              value={generationForm.skills}
-              onChange={(e) => setGenerationForm(prev => ({ ...prev, skills: e.target.value }))}
-              placeholder="e.g., Programming, Problem solving, Teamwork"
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          
-          <div>
-            <label className="text-sm font-medium">Additional Information</label>
-            <textarea
-              value={generationForm.additionalInfo}
-              onChange={(e) => setGenerationForm(prev => ({ ...prev, additionalInfo: e.target.value }))}
-              placeholder="Any additional context or requirements..."
-              rows={3}
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          
-          <Button 
-            onClick={handleGenerateCV} 
-            disabled={isLoading || serviceStatus !== 'healthy'}
-            className="w-full"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Generating CV...
-              </>
-            ) : (
-              <>
-                <Sparkles className="mr-2 h-4 w-4" />
-                Generate Professional CV
-              </>
+        
+        <CardContent className="flex-1 flex flex-col p-0">
+          {/* Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            {messages.map((message) => (
+              <div
+                key={message.id}
+                className={`flex gap-3 ${
+                  message.type === 'user' ? 'justify-end' : 'justify-start'
+                }`}
+              >
+                {message.type === 'ai' && (
+                  <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <Bot className="w-4 h-4 text-blue-600" />
+                  </div>
+                )}
+                
+                <div
+                  className={`max-w-[80%] rounded-lg px-4 py-2 ${
+                    message.type === 'user'
+                      ? 'bg-blue-600 text-white'
+                      : 'bg-gray-100 text-gray-900'
+                  }`}
+                >
+                  <div className="whitespace-pre-wrap text-sm">
+                    {message.content}
+                  </div>
+                  <div className={`text-xs mt-1 ${
+                    message.type === 'user' ? 'text-blue-100' : 'text-gray-500'
+                  }`}>
+                    {message.timestamp.toLocaleTimeString()}
+                  </div>
+                </div>
+
+                {message.type === 'user' && (
+                  <div className="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0">
+                    <User className="w-4 h-4 text-gray-600" />
+                  </div>
+                )}
+              </div>
+            ))}
+            
+            {isLoading && (
+              <div className="flex gap-3 justify-start">
+                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                  <Bot className="w-4 h-4 text-blue-600" />
+                </div>
+                <div className="bg-gray-100 rounded-lg px-4 py-2">
+                  <div className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span className="text-sm text-gray-600">AI raksta...</span>
+                  </div>
+                </div>
+              </div>
             )}
-          </Button>
+            
+            <div ref={messagesEndRef} />
+          </div>
+
+          {/* Input Area */}
+          <div className="border-t p-4">
+            <div className="flex gap-2">
+              <Input
+                value={currentInput}
+                onChange={(e) => setCurrentInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder="Rakstiet savu ziņu..."
+                disabled={isLoading || serviceStatus !== 'healthy'}
+                className="flex-1"
+              />
+              <Button
+                onClick={handleSendMessage}
+                disabled={!currentInput.trim() || isLoading || serviceStatus !== 'healthy'}
+                size="icon"
+              >
+                <Send className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
         </CardContent>
       </Card>
 
-      {/* CV Improvement */}
-      {cvData && (
-        <Card>
+      {/* CV Summary and Generation */}
+      {cvSummary && (
+        <Card className="border-green-200 bg-green-50">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Wand2 className="h-5 w-5" />
-              Improve Existing CV
+            <CardTitle className="text-green-800 flex items-center gap-2">
+              <CheckCircle className="h-5 w-5" />
+              CV Kopsavilkums
             </CardTitle>
-            <CardDescription>
-              Get AI-powered suggestions to enhance your current CV
+            <CardDescription className="text-green-700">
+              AI ir savācis pietiekami daudz informācijas jūsu CV izveidei
             </CardDescription>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Improvement Type</label>
-              <Select 
-                value={improvementForm.improvementType} 
-                onValueChange={(value: any) => setImprovementForm(prev => ({ ...prev, improvementType: value }))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="content">Content & Impact</SelectItem>
-                  <SelectItem value="structure">Structure & Organization</SelectItem>
-                  <SelectItem value="language">Language & Grammar</SelectItem>
-                  <SelectItem value="professional">Professional Standards</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <label className="text-sm font-medium">Specific Feedback (Optional)</label>
-              <textarea
-                value={improvementForm.specificFeedback}
-                onChange={(e) => setImprovementForm(prev => ({ ...prev, specificFeedback: e.target.value }))}
-                placeholder="Any specific areas you'd like me to focus on..."
-                rows={3}
-                className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </div>
-            
-            <Button 
-              onClick={handleImproveCV} 
-              disabled={isLoading || serviceStatus !== 'healthy'}
-              className="w-full"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Analyzing CV...
-                </>
-              ) : (
-                <>
-                  <Wand2 className="mr-2 h-4 w-4" />
-                  Improve CV
-                </>
-              )}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Job-Specific CV */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Target className="h-5 w-5" />
-            Job-Specific CV Optimization
-          </CardTitle>
-          <CardDescription>
-            Tailor your CV for a specific job opportunity
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <label className="text-sm font-medium">Job Description</label>
-            <textarea
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
-              placeholder="Paste the job description here to get tailored CV suggestions..."
-              rows={6}
-              className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          
-          <Button 
-            onClick={handleJobSpecificCV} 
-            disabled={isLoading || serviceStatus !== 'healthy'}
-            className="w-full"
-          >
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Analyzing Job...
-              </>
-            ) : (
-              <>
-                <Target className="mr-2 h-4 w-4" />
-                Optimize for This Job
-              </>
-            )}
-          </Button>
-        </CardContent>
-      </Card>
-
-      {/* AI Response */}
-      {aiResponse && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-4" />
-              AI Response
-            </CardTitle>
-          </CardHeader>
           <CardContent>
-            {aiResponse.success ? (
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Badge variant="secondary">
-                    {aiResponse.language === 'lv' ? 'Latviešu' : aiResponse.language === 'ru' ? 'Русский' : 'English'}
-                  </Badge>
-                  <Badge variant="outline">AI Generated</Badge>
-                </div>
-                <div className="prose max-w-none">
-                  <pre className="whitespace-pre-wrap text-sm bg-gray-50 p-4 rounded-md border">
-                    {aiResponse.content}
-                  </pre>
-                </div>
+            <div className="space-y-4">
+              <div className="text-sm text-green-800 bg-green-100 p-3 rounded-md">
+                {cvSummary}
               </div>
-            ) : (
-              <div className="text-red-600 bg-red-50 p-4 rounded-md border">
-                <strong>Error:</strong> {aiResponse.error}
+              <div className="flex gap-2">
+                <Button
+                  onClick={handleGenerateCV}
+                  disabled={isGeneratingCV}
+                  className="flex-1"
+                >
+                  {isGeneratingCV ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Ģenerē CV...
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="mr-2 h-4 w-4" />
+                      Ģenerēt CV
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={() => setCvSummary(null)}
+                  variant="outline"
+                >
+                  Atcelt
+                </Button>
               </div>
-            )}
+            </div>
           </CardContent>
         </Card>
       )}
