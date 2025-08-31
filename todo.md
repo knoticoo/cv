@@ -30,6 +30,7 @@ Creating a modern, multilingual CV maker specifically tailored for the Latvian j
 - [x] **Print Optimization** - Print-friendly formatting
 - [x] **ATS Optimization** - ATS-friendly formatting options
 - [x] **AI Integration** - Complete AI CV assistant with Ollama integration
+- [x] **Profile Management** - Profile page to view and manage saved CVs
 
 ### 🔄 In Progress
 - [ ] **Testing & Validation** - Setting up comprehensive testing framework

@@ -2,25 +2,47 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { CVData } from '@/types/cv';
 import { generateId } from '@/lib/utils';
 import { storage, useAutoSave } from '@/lib/storage';
 import CVEditor from '@/components/CVEditor';
 import CVPreview from '@/components/CVPreview';
 import AICVAssistant from '@/components/AICVAssistant';
+import { Button } from '@/components/ui/button';
+import { ArrowLeft } from 'lucide-react';
 
 export default function CreateCVPage() {
   const t = useTranslations('navigation');
+  const router = useRouter();
   
   const [cvData, setCVData] = useState<CVData | null>(null);
   const [showPreview, setShowPreview] = useState(false);
   const [showAI, setShowAI] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   
   // Always call the hook, but handle null case inside
   const { triggerAutoSave } = useAutoSave(cvData || {} as CVData);
 
   // Initialize CV data on mount to avoid SSR/client mismatches
   useEffect(() => {
+    // Check if we're editing an existing CV
+    const urlParams = new URLSearchParams(window.location.search);
+    const cvId = urlParams.get('id');
+    
+    if (cvId) {
+      // Load existing CV for editing
+      const existingCV = storage.loadCV(cvId);
+      if (existingCV) {
+        setCVData(existingCV);
+        setIsEditing(true);
+        setLoading(false);
+        return;
+      }
+    }
+    
+    // Load last saved CV or create new one
     const savedCV = storage.loadCV();
     if (savedCV) {
       setCVData(savedCV);
@@ -53,6 +75,7 @@ export default function CreateCVPage() {
         language: 'lv'
       });
     }
+    setLoading(false);
   }, []);
 
   const updateCVData = (updates: Partial<CVData>) => {
@@ -83,11 +106,27 @@ export default function CreateCVPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="container mx-auto px-3 sm:px-4 py-3 sm:py-6 lg:py-8">
         <div className="mb-4 sm:mb-6 lg:mb-8">
+          {isEditing && (
+            <div className="mb-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => router.push('/profile')}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Atpakaļ uz profilu
+              </Button>
+            </div>
+          )}
           <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-2 text-center sm:text-left">
-            {t('createCV')}
+            {isEditing ? 'Rediģēt CV' : t('createCV')}
           </h1>
           <p className="text-xs sm:text-sm lg:text-base text-muted-foreground text-center sm:text-left">
-            Izveidojiet savu profesionālo CV, izmantojot mūsu interaktīvo redaktoru
+            {isEditing 
+              ? 'Rediģējiet savu CV, izmantojot mūsu interaktīvo redaktoru'
+              : 'Izveidojiet savu profesionālo CV, izmantojot mūsu interaktīvo redaktoru'
+            }
           </p>
         </div>
 
