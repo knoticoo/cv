@@ -1,0 +1,131 @@
+{
+  "common": {
+    "save": "Сохранить",
+    "cancel": "Отменить",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "add": "Добавить",
+    "remove": "Удалить",
+    "download": "Скачать",
+    "preview": "Предварительный просмотр",
+    "print": "Печать",
+    "share": "Поделиться",
+    "next": "Далее",
+    "previous": "Назад",
+    "finish": "Завершить",
+    "optional": "Необязательно"
+  },
+  "navigation": {
+    "home": "Главная",
+    "createCV": "Создать резюме",
+    "templates": "Шаблоны",
+    "myCV": "Мое резюме",
+    "coverLetter": "Сопроводительное письмо",
+    "help": "Помощь"
+  },
+  "personalInfo": {
+    "title": "Личная информация",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "email": "Электронная почта",
+    "phone": "Телефон",
+    "address": "Адрес",
+    "street": "Улица",
+    "city": "Город",
+    "postalCode": "Почтовый индекс",
+    "country": "Страна",
+    "dateOfBirth": "Дата рождения",
+    "nationality": "Национальность",
+    "maritalStatus": "Семейное положение",
+    "drivingLicense": "Водительские права",
+    "photo": "Фотография",
+    "website": "Веб-сайт",
+    "linkedin": "LinkedIn профиль",
+    "github": "GitHub профиль"
+  },
+  "workExperience": {
+    "title": "Опыт работы",
+    "position": "Должность",
+    "company": "Компания",
+    "location": "Местоположение",
+    "startDate": "Дата начала",
+    "endDate": "Дата окончания",
+    "current": "Текущая работа",
+    "description": "Описание",
+    "achievements": "Достижения",
+    "addExperience": "Добавить опыт работы"
+  },
+  "education": {
+    "title": "Образование",
+    "degree": "Степень/Квалификация",
+    "institution": "Учебное заведение",
+    "location": "Местоположение",
+    "startDate": "Дата начала",
+    "endDate": "Дата окончания",
+    "current": "Текущее обучение",
+    "gpa": "Средний балл",
+    "description": "Описание",
+    "thesis": "Дипломная работа",
+    "addEducation": "Добавить образование"
+  },
+  "skills": {
+    "title": "Навыки",
+    "languageSkills": "Языковые навыки",
+    "itSkills": "IT навыки",
+    "otherSkills": "Другие навыки",
+    "language": "Язык",
+    "proficiency": "Уровень",
+    "certifications": "Сертификаты",
+    "category": "Категория",
+    "yearsOfExperience": "Лет опыта",
+    "addLanguage": "Добавить язык",
+    "addITSkill": "Добавить IT навык",
+    "addSkill": "Добавить навык"
+  },
+  "references": {
+    "title": "Рекомендации",
+    "name": "Имя",
+    "position": "Должность",
+    "company": "Компания",
+    "email": "Электронная почта",
+    "phone": "Телефон",
+    "relationship": "Отношения",
+    "addReference": "Добавить рекомендацию"
+  },
+  "templates": {
+    "europass": "Europass",
+    "modern": "Современный",
+    "traditional": "Традиционный",
+    "creative": "Креативный",
+    "selectTemplate": "Выбрать шаблон"
+  },
+  "export": {
+    "title": "Экспорт резюме",
+    "pdf": "PDF формат",
+    "docx": "Word документ",
+    "txt": "Текстовый файл",
+    "atsOptimized": "ATS оптимизированный"
+  },
+  "validation": {
+    "required": "Это поле обязательно",
+    "email": "Неверный формат электронной почты",
+    "phone": "Неверный номер телефона",
+    "url": "Неверный URL",
+    "date": "Неверная дата"
+  },
+  "privacy": {
+    "title": "Настройки конфиденциальности",
+    "public": "Публичный",
+    "private": "Приватный",
+    "shareableLink": "Ссылка для общего доступа",
+    "allowDownload": "Разрешить скачивание",
+    "allowCopy": "Разрешить копирование",
+    "expirationDate": "Срок действия"
+  },
+  "tips": {
+    "personalInfo": "Убедитесь, что вся контактная информация актуальна и профессиональна.",
+    "workExperience": "Описывайте свои достижения с конкретными примерами и цифрами.",
+    "education": "Включайте только релевантное образование, связанное с желаемой должностью.",
+    "skills": "Указывайте только те навыки, которые можете подтвердить опытом или сертификатами."
+  }
+}
