@@ -41,7 +41,8 @@ export default function LoginPage() {
         localStorage.setItem('user-session', JSON.stringify({
           id: 'demo-user',
           email: formData.email,
-          name: 'Demo User',
+          firstName: 'Demo',
+          lastName: 'User',
           loggedIn: true
         }));
         
