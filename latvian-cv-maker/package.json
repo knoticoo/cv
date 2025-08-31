@@ -27,7 +27,11 @@
     "ai:start": "./start.sh --ai-start",
     "ai:stop": "./start.sh --ai-stop",
     "ai:prod:status": "./scripts/start-prod.sh --ai-status",
-    "ai:prod:start": "./scripts/start-prod.sh --ai-start"
+    "ai:prod:start": "./scripts/start-prod.sh --ai-start",
+    "update:refresh": "./scripts/update-refresh.sh",
+    "update:cache": "./scripts/update-refresh.sh --clear-cache",
+    "update:rebuild": "./scripts/update-refresh.sh --rebuild",
+    "update:full": "./scripts/update-refresh.sh --full"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
