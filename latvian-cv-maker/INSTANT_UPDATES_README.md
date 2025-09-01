@@ -158,8 +158,8 @@ Check the status of your services:
 # Check production status
 npm run status
 
-# Check AI service status
-npm run ai:prod:status
+# Check service status
+npm run status
 
 # View production logs
 npm run logs
