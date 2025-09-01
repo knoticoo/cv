@@ -13,7 +13,7 @@ export const templates: CVTemplate[] = [
   {
     id: 'modern-professional',
     name: 'Mūsdienīgs Profesionāls',
-    description: 'Tīrs, mūsdienīgs dizains ar uzsvaru uz lasāmību',
+    description: 'Tīrs, mūsdienīgs dizains ar uzsvaru uz lasāmību un vizuālo pievilcību',
     category: 'modern',
     preview: '/templates/modern-preview.jpg',
     isPremium: false,
@@ -22,7 +22,7 @@ export const templates: CVTemplate[] = [
   {
     id: 'traditional-business',
     name: 'Tradicionāls Biznesa',
-    description: 'Konservatīvs stils tradicionālām nozarēm',
+    description: 'Konservatīvs stils tradicionālām nozarēm ar formālu izskatu',
     category: 'traditional',
     preview: '/templates/traditional-preview.jpg',
     isPremium: false,

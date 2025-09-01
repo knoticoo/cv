@@ -9,12 +9,12 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 5,
   userScalable: true,
+  themeColor: '#3b82f6',
 };
 
 export const metadata: Metadata = {
   title: 'Latvian CV Maker - Create Professional CVs',
   description: 'Create professional CVs with our easy-to-use editor. Support for Latvian, Russian and English languages. Europass compatible templates.',
-  themeColor: '#3b82f6',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,

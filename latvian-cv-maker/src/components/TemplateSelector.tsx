@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Crown, Check, Eye } from 'lucide-react';
+import TemplatePreviewModal from './TemplatePreviewModal';
 
 interface TemplateSelectorProps {
   cvData: CVData;
@@ -16,6 +17,7 @@ interface TemplateSelectorProps {
 
 export default function TemplateSelector({ cvData, onTemplateChange, selectedTemplate }: TemplateSelectorProps) {
   const [previewTemplate, setPreviewTemplate] = useState<string | null>(null);
+  const [isPreviewModalOpen, setIsPreviewModalOpen] = useState(false);
 
   const handleTemplateSelect = (templateId: string) => {
     onTemplateChange(templateId);
@@ -154,6 +156,7 @@ export default function TemplateSelector({ cvData, onTemplateChange, selectedTem
                     onClick={(e) => {
                       e.stopPropagation();
                       setPreviewTemplate(template.id);
+                      setIsPreviewModalOpen(true);
                     }}
                   >
                     <Eye className="w-3 h-3 mr-1" />
@@ -192,6 +195,15 @@ export default function TemplateSelector({ cvData, onTemplateChange, selectedTem
           Iegūt Premium Piekļuvi
         </Button>
       </div>
+
+      {/* Template Preview Modal */}
+      <TemplatePreviewModal
+        isOpen={isPreviewModalOpen}
+        onClose={() => setIsPreviewModalOpen(false)}
+        template={templates.find(t => t.id === previewTemplate) || null}
+        onSelectTemplate={handleTemplateSelect}
+        selectedTemplate={selectedTemplate}
+      />
     </div>
   );
 }

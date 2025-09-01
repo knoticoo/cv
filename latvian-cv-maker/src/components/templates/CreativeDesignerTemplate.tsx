@@ -12,244 +12,271 @@ export default function CreativeDesignerTemplate({ cvData, locale }: CreativeDes
   const { personalInfo } = cvData;
 
   return (
-    <div className="bg-white creative-designer-cv">
-      {/* Creative Header with Gradient */}
-      <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white p-8">
-        <div className="flex items-center space-x-6">
-          {personalInfo.photo && (
-            <div className="flex-shrink-0">
-              <img
-                src={personalInfo.photo}
-                alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
-                className="w-32 h-32 rounded-full object-cover border-4 border-white shadow-lg"
-              />
+    <div className="bg-white creative-designer-cv" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
+      {/* Creative Header with Diagonal Design */}
+      <div className="relative overflow-hidden">
+        {/* Background with diagonal cut */}
+        <div className="bg-gradient-to-br from-pink-500 via-purple-500 to-indigo-600 h-64 relative">
+          <div className="absolute bottom-0 right-0 w-0 h-0 border-l-[100vw] border-b-[100px] border-transparent border-b-white"></div>
+        </div>
+        
+        {/* Content overlay */}
+        <div className="absolute inset-0 p-8">
+          <div className="flex items-center justify-between h-full">
+            {/* Left side - Name and Title */}
+            <div className="text-white">
+              <h1 className="text-5xl font-black mb-2 tracking-tight">
+                {personalInfo.firstName}
+              </h1>
+              <h1 className="text-5xl font-black mb-4 tracking-tight text-pink-200">
+                {personalInfo.lastName}
+              </h1>
+              {cvData.workExperience.length > 0 && (
+                <p className="text-xl font-medium text-pink-100">
+                  {cvData.workExperience[0].position}
+                </p>
+              )}
             </div>
-          )}
-          
-          <div className="flex-1">
-            <h1 className="text-4xl font-bold mb-2">
-              {personalInfo.firstName}
-              <span className="block text-pink-200">{personalInfo.lastName}</span>
-            </h1>
             
-            <div className="space-y-1 text-pink-100">
-              {personalInfo.email && <p>✉️ {personalInfo.email}</p>}
-              {personalInfo.phone && <p>📱 {personalInfo.phone}</p>}
-              {personalInfo.address.city && <p>📍 {personalInfo.address.city}, {personalInfo.address.country}</p>}
-            </div>
-            
-            <div className="flex space-x-4 mt-4">
-              {personalInfo.linkedin && (
-                <a href={personalInfo.linkedin} className="bg-white/20 px-3 py-1 rounded-full text-sm hover:bg-white/30 transition-colors">
-                  LinkedIn
-                </a>
-              )}
-              {personalInfo.github && (
-                <a href={personalInfo.github} className="bg-white/20 px-3 py-1 rounded-full text-sm hover:bg-white/30 transition-colors">
-                  GitHub
-                </a>
-              )}
-              {personalInfo.website && (
-                <a href={personalInfo.website} className="bg-white/20 px-3 py-1 rounded-full text-sm hover:bg-white/30 transition-colors">
-                  Portfolio
-                </a>
-              )}
-            </div>
+            {/* Right side - Photo */}
+            {personalInfo.photo && (
+              <div className="relative">
+                <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-white shadow-2xl">
+                  <img
+                    src={personalInfo.photo}
+                    alt={`${personalInfo.firstName} ${personalInfo.lastName}`}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                {/* Decorative elements */}
+                <div className="absolute -top-2 -right-2 w-6 h-6 bg-yellow-400 rounded-full"></div>
+                <div className="absolute -bottom-2 -left-2 w-4 h-4 bg-pink-400 rounded-full"></div>
+              </div>
+            )}
           </div>
         </div>
       </div>
 
-      <div className="p-8">
-        {/* Professional Summary */}
-        {cvData.professionalSummary && (
-          <div className="mb-8">
-            <div className="bg-gradient-to-r from-pink-500 to-purple-500 text-white p-4 rounded-t-lg">
-              <h2 className="text-xl font-bold">✨ Radošais Profils</h2>
-            </div>
-            <div className="bg-pink-50 p-4 rounded-b-lg border-l-4 border-pink-500">
-              <p className="text-gray-700 leading-relaxed italic">{cvData.professionalSummary}</p>
-            </div>
-          </div>
-        )}
-
-        {/* Experience with Creative Styling */}
-        {cvData.workExperience.length > 0 && (
-          <div className="mb-8">
-            <div className="bg-gradient-to-r from-purple-500 to-indigo-500 text-white p-4 rounded-t-lg">
-              <h2 className="text-xl font-bold">🚀 Radošā Pieredze</h2>
-            </div>
-            <div className="bg-purple-50 p-4 rounded-b-lg">
-              {cvData.workExperience.map((exp, index) => (
-                <div key={exp.id} className="relative mb-6 last:mb-0">
-                  {/* Timeline dot */}
-                  <div className="absolute left-0 top-2 w-4 h-4 bg-gradient-to-r from-pink-500 to-purple-500 rounded-full"></div>
-                  
-                  <div className="ml-8">
-                    <div className="flex justify-between items-start mb-2">
-                      <div>
-                        <h3 className="text-lg font-bold text-gray-900">{exp.position}</h3>
-                        <p className="text-purple-600 font-semibold">{exp.company}</p>
-                        {exp.location && <p className="text-gray-600 text-sm">{exp.location}</p>}
-                      </div>
-                      <div className="bg-gradient-to-r from-pink-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-medium">
-                        {formatDate(exp.startDate, locale)} - {exp.current ? 'tagad' : formatDate(exp.endDate || '', locale)}
-                      </div>
-                    </div>
-                    
-                    {exp.description && (
-                      <p className="text-gray-700 mb-3">{exp.description}</p>
-                    )}
-                    
-                    {exp.achievements && exp.achievements.length > 0 && (
-                      <div className="bg-white rounded-lg p-3 shadow-sm">
-                        <h4 className="font-semibold text-purple-700 mb-2">🎯 Sasniegumi:</h4>
-                        <ul className="space-y-1">
-                          {exp.achievements.map((achievement, achIndex) => (
-                            <li key={achIndex} className="flex items-start">
-                              <span className="text-pink-500 mr-2">▸</span>
-                              <span className="text-gray-700">{achievement}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Education */}
-        {cvData.education.length > 0 && (
-          <div className="mb-8">
-            <div className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white p-4 rounded-t-lg">
-              <h2 className="text-xl font-bold">🎓 Radošā Izglītība</h2>
-            </div>
-            <div className="bg-indigo-50 p-4 rounded-b-lg">
-              {cvData.education.map((edu) => (
-                <div key={edu.id} className="mb-4 last:mb-0">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-bold text-gray-900">{edu.degree}</h3>
-                      <p className="text-indigo-600 font-semibold">{edu.institution}</p>
-                      {edu.location && <p className="text-gray-600 text-sm">{edu.location}</p>}
-                      {edu.gpa && <p className="text-gray-600 text-sm">📊 {edu.gpa}</p>}
-                      {edu.thesis && <p className="text-gray-600 text-sm">📋 {edu.thesis}</p>}
-                    </div>
-                    <div className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-3 py-1 rounded-full text-sm">
-                      {formatDate(edu.startDate, locale)} - {edu.current ? 'tagad' : formatDate(edu.endDate || '', locale)}
-                    </div>
-                  </div>
-                  {edu.description && (
-                    <p className="text-gray-700 mt-2 text-sm">{edu.description}</p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Skills Grid */}
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Language Skills */}
-          {cvData.languageSkills.length > 0 && (
-            <div>
-              <div className="bg-gradient-to-r from-green-500 to-teal-500 text-white p-3 rounded-t-lg">
-                <h3 className="font-bold">🌍 Valodas</h3>
-              </div>
-              <div className="bg-green-50 p-4 rounded-b-lg space-y-3">
-                {cvData.languageSkills.map((lang) => (
-                  <div key={lang.id} className="flex justify-between items-center">
-                    <span className="font-medium">{getLanguageLabel(lang.language, locale)}</span>
-                    <div className="flex space-x-1">
-                      {['A1', 'A2', 'B1', 'B2', 'C1', 'C2'].map((level, index) => (
-                        <div
-                          key={level}
-                          className={`w-3 h-3 rounded-full ${
-                            ['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'Native'].indexOf(lang.proficiency) >= index
-                              ? 'bg-gradient-to-r from-green-500 to-teal-500'
-                              : 'bg-gray-200'
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
+      {/* Contact Information Bar */}
+      <div className="bg-gray-900 text-white py-4 px-8">
+        <div className="flex flex-wrap items-center justify-center gap-8 text-sm">
+          {personalInfo.email && (
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-pink-400 rounded-full"></div>
+              <span>{personalInfo.email}</span>
             </div>
           )}
+          {personalInfo.phone && (
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-purple-400 rounded-full"></div>
+              <span>{personalInfo.phone}</span>
+            </div>
+          )}
+          {personalInfo.address.city && (
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-indigo-400 rounded-full"></div>
+              <span>{personalInfo.address.city}, {personalInfo.address.country}</span>
+            </div>
+          )}
+          {personalInfo.linkedin && (
+            <div className="flex items-center space-x-2">
+              <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+              <span>{personalInfo.linkedin}</span>
+            </div>
+          )}
+        </div>
+      </div>
 
-          {/* IT Skills */}
-          {cvData.itSkills.length > 0 && (
-            <div>
-              <div className="bg-gradient-to-r from-orange-500 to-red-500 text-white p-3 rounded-t-lg">
-                <h3 className="font-bold">💻 IT Prasmes</h3>
+      {/* Main Content - Asymmetrical Layout */}
+      <div className="p-8">
+        <div className="grid lg:grid-cols-12 gap-8">
+          {/* Left Column - Narrow */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* Skills Section */}
+            {cvData.skills.length > 0 && (
+              <div className="bg-gradient-to-br from-pink-50 to-purple-50 p-6 rounded-2xl border-l-4 border-pink-400">
+                <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                  <span className="text-2xl mr-2">🎯</span>
+                  Prasmes
+                </h2>
+                <div className="space-y-3">
+                  {cvData.skills.map((skill, index) => (
+                    <div key={index} className="bg-white p-3 rounded-xl shadow-sm">
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-medium text-gray-800">{skill.name}</span>
+                        <span className="text-sm text-pink-600 font-bold">
+                          {skill.proficiency || 'Intermediate'}
+                        </span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-pink-400 to-purple-500 h-2 rounded-full transition-all duration-300"
+                          style={{ 
+                            width: skill.proficiency === 'Expert' ? '100%' : 
+                                   skill.proficiency === 'Advanced' ? '80%' : 
+                                   skill.proficiency === 'Intermediate' ? '60%' : '40%' 
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <div className="bg-orange-50 p-4 rounded-b-lg">
-                <div className="flex flex-wrap gap-2">
-                  {cvData.itSkills.map((skill) => (
+            )}
+
+            {/* Language Skills */}
+            {cvData.languageSkills.length > 0 && (
+              <div className="bg-gradient-to-br from-indigo-50 to-blue-50 p-6 rounded-2xl border-l-4 border-indigo-400">
+                <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                  <span className="text-2xl mr-2">🌍</span>
+                  Valodu prasmes
+                </h2>
+                <div className="space-y-3">
+                  {cvData.languageSkills.map((lang, index) => (
+                    <div key={index} className="bg-white p-3 rounded-xl shadow-sm">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-gray-800">{lang.language}</span>
+                        <span className="text-sm font-bold text-indigo-600 bg-indigo-100 px-2 py-1 rounded-full">
+                          {lang.proficiency}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Education */}
+            {cvData.education.length > 0 && (
+              <div className="bg-gradient-to-br from-green-50 to-teal-50 p-6 rounded-2xl border-l-4 border-green-400">
+                <h2 className="text-xl font-bold text-gray-800 mb-4 flex items-center">
+                  <span className="text-2xl mr-2">🎓</span>
+                  Izglītība
+                </h2>
+                <div className="space-y-4">
+                  {cvData.education.map((edu, index) => (
+                    <div key={index} className="bg-white p-4 rounded-xl shadow-sm">
+                      <h3 className="font-bold text-gray-800 mb-1">{edu.degree}</h3>
+                      <p className="text-gray-600 text-sm mb-2">{edu.institution}</p>
+                      <p className="text-green-600 text-xs font-medium">
+                        {formatDate(edu.startDate, locale)} - {edu.current ? 'Pašlaik' : (edu.endDate ? formatDate(edu.endDate, locale) : '')}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Right Column - Wide */}
+          <div className="lg:col-span-8 space-y-8">
+            {/* Professional Summary */}
+            {cvData.professionalSummary && (
+              <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-6 rounded-2xl">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                  <span className="text-3xl mr-3">✨</span>
+                  Profesionālais kopsavilkums
+                </h2>
+                <p className="text-gray-700 leading-relaxed text-lg">{cvData.professionalSummary}</p>
+              </div>
+            )}
+
+            {/* Work Experience */}
+            {cvData.workExperience.length > 0 && (
+              <div>
+                <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                  <span className="text-3xl mr-3">💼</span>
+                  Darba pieredze
+                </h2>
+                <div className="space-y-6">
+                  {cvData.workExperience.map((exp, index) => (
+                    <div key={exp.id} className="relative">
+                      {/* Timeline connector */}
+                      <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-pink-400 to-purple-500"></div>
+                      
+                      <div className="relative bg-white p-6 rounded-2xl shadow-lg border-l-4 border-pink-400 ml-8">
+                        {/* Timeline dot */}
+                        <div className="absolute -left-10 top-6 w-4 h-4 bg-gradient-to-r from-pink-400 to-purple-500 rounded-full border-4 border-white shadow-lg"></div>
+                        
+                        <div className="flex items-start justify-between mb-3">
+                          <div>
+                            <h3 className="text-xl font-bold text-gray-800">{exp.position}</h3>
+                            <p className="text-pink-600 font-semibold text-lg">{exp.company}</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm text-gray-600 bg-gray-100 px-3 py-1 rounded-full">
+                              {formatDate(exp.startDate, locale)} - {exp.current ? 'Pašlaik' : (exp.endDate ? formatDate(exp.endDate, locale) : '')}
+                            </p>
+                            {exp.location && (
+                              <p className="text-sm text-gray-500 mt-1">{exp.location}</p>
+                            )}
+                          </div>
+                        </div>
+                        
+                        {exp.description && (
+                          <p className="text-gray-700 mb-3">{exp.description}</p>
+                        )}
+                        
+                        {exp.achievements && exp.achievements.length > 0 && (
+                          <div className="bg-gradient-to-r from-pink-50 to-purple-50 p-4 rounded-xl">
+                            <p className="font-semibold text-gray-800 mb-2">🏆 Galvenie sasniegumi:</p>
+                            <ul className="space-y-1">
+                              {exp.achievements.map((achievement, idx) => (
+                                <li key={idx} className="text-sm text-gray-700 flex items-start">
+                                  <span className="text-pink-500 mr-2">•</span>
+                                  {achievement}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* IT Skills */}
+            {cvData.itSkills.length > 0 && (
+              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-2xl">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                  <span className="text-3xl mr-3">💻</span>
+                  IT prasmes
+                </h2>
+                <div className="flex flex-wrap gap-3">
+                  {cvData.itSkills.map((skill, index) => (
                     <span
-                      key={skill.id}
-                      className="bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1 rounded-full text-sm font-medium"
+                      key={index}
+                      className="bg-white text-blue-800 px-4 py-2 rounded-full text-sm font-medium shadow-sm border border-blue-200 hover:shadow-md transition-shadow"
                     >
                       {skill.name}
                     </span>
                   ))}
                 </div>
               </div>
-            </div>
-          )}
+            )}
+
+            {/* References */}
+            {cvData.references.length > 0 && (
+              <div className="bg-gradient-to-r from-yellow-50 to-orange-50 p-6 rounded-2xl">
+                <h2 className="text-2xl font-bold text-gray-800 mb-4 flex items-center">
+                  <span className="text-3xl mr-3">🤝</span>
+                  Atsauksmes
+                </h2>
+                <div className="grid md:grid-cols-2 gap-4">
+                  {cvData.references.map((ref, index) => (
+                    <div key={index} className="bg-white p-4 rounded-xl shadow-sm">
+                      <h3 className="font-bold text-gray-800 mb-1">{ref.name}</h3>
+                      <p className="text-gray-600 text-sm">{ref.position} at {ref.company}</p>
+                      <p className="text-orange-600 text-xs">{ref.email}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
-
-        {/* Other Skills */}
-        {cvData.skills.length > 0 && (
-          <div className="mt-6">
-            <div className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white p-3 rounded-t-lg">
-              <h3 className="font-bold">⭐ Citas Prasmes</h3>
-            </div>
-            <div className="bg-yellow-50 p-4 rounded-b-lg">
-              <div className="flex flex-wrap gap-2">
-                {cvData.skills.map((skill) => (
-                  <span
-                    key={skill.id}
-                    className="bg-gradient-to-r from-yellow-500 to-orange-500 text-white px-3 py-1 rounded-full text-sm font-medium"
-                  >
-                    {skill.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* References */}
-        {cvData.references.length > 0 && (
-          <div className="mt-8">
-            <div className="bg-gradient-to-r from-gray-700 to-gray-900 text-white p-3 rounded-t-lg">
-              <h3 className="font-bold">👥 Atsauksmes</h3>
-            </div>
-            <div className="bg-gray-50 p-4 rounded-b-lg">
-              <div className="grid md:grid-cols-2 gap-4">
-                {cvData.references.map((ref) => (
-                  <div key={ref.id} className="bg-white p-4 rounded-lg shadow-sm border-l-4 border-pink-500">
-                    <h4 className="font-bold text-gray-900">{ref.name}</h4>
-                    <p className="text-purple-600 font-medium">{ref.position}</p>
-                    <p className="text-gray-700">{ref.company}</p>
-                    <p className="text-gray-600 text-sm">{ref.email}</p>
-                    {ref.phone && <p className="text-gray-600 text-sm">{ref.phone}</p>}
-                    <p className="text-gray-500 text-xs italic mt-1">{ref.relationship}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Creative Footer */}
-      <div className="bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 text-white text-center py-4">
-        <p className="text-sm">Radīts ar kreativitāti un aizrautību ✨</p>
       </div>
     </div>
   );

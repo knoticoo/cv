@@ -33,7 +33,7 @@ import {
 } from 'lucide-react';
 
 export default function ProfilePage() {
-  const t = useTranslations('navigation');
+  const t = useTranslations('profile');
   const router = useRouter();
   
   const [savedCVs, setSavedCVs] = useState<CVData[]>([]);
@@ -69,7 +69,7 @@ export default function ProfilePage() {
   };
 
   const handleDeleteCV = (cvId: string) => {
-    if (confirm('Are you sure you want to delete this CV?')) {
+    if (confirm(t('deleteConfirm'))) {
       storage.deleteCV(cvId);
       loadSavedCVs();
     }
@@ -114,7 +114,7 @@ export default function ProfilePage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
         <div className="text-center">
           <div className="animate-spin rounded-full h-24 w-24 sm:h-32 sm:w-32 border-b-2 border-primary mx-auto mb-4"></div>
-          <p className="text-muted-foreground text-sm sm:text-base">Loading profile...</p>
+          <p className="text-muted-foreground text-sm sm:text-base">{t('loading')}</p>
         </div>
       </div>
     );
@@ -128,10 +128,10 @@ export default function ProfilePage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-foreground mb-2">
-                Mans Profils
+                {t('title')}
               </h1>
               <p className="text-sm sm:text-base lg:text-lg text-muted-foreground">
-                Pārvaldiet savus saglabātos CV un izveidojiet jaunus
+                {t('subtitle')}
               </p>
             </div>
             
@@ -148,7 +148,7 @@ export default function ProfilePage() {
                   className="flex items-center gap-2"
                 >
                   <LogOut className="w-4 h-4" />
-                  Iziet
+                  {t('logout')}
                 </Button>
               </div>
             )}
@@ -163,7 +163,7 @@ export default function ProfilePage() {
             className="w-full sm:w-auto"
           >
             <Plus className="w-5 h-5 mr-2" />
-            Izveidot jaunu CV
+            {t('createNew')}
           </Button>
         </div>
 
@@ -172,13 +172,13 @@ export default function ProfilePage() {
           <Card className="text-center py-12">
             <CardContent>
               <FileText className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-2">Nav saglabātu CV</h3>
+              <h3 className="text-xl font-semibold mb-2">{t('noSavedCVs')}</h3>
               <p className="text-muted-foreground mb-6">
-                Jums vēl nav izveidots neviens CV. Sāciet ar jauna CV izveidi!
+                {t('noSavedCVsDesc')}
               </p>
               <Button onClick={handleCreateNew}>
                 <Plus className="w-4 h-4 mr-2" />
-                Izveidot pirmo CV
+                {t('createFirst')}
               </Button>
             </CardContent>
           </Card>
@@ -215,35 +215,35 @@ export default function ProfilePage() {
                         <Briefcase className="w-4 h-4 text-muted-foreground" />
                       </div>
                       <p className="text-sm font-medium">{cv.workExperience.length}</p>
-                      <p className="text-xs text-muted-foreground">Darba pieredze</p>
+                      <p className="text-xs text-muted-foreground">{t('workExperience')}</p>
                     </div>
                     <div className="text-center">
                       <div className="flex items-center justify-center mb-1">
                         <GraduationCap className="w-4 h-4 text-muted-foreground" />
                       </div>
                       <p className="text-sm font-medium">{cv.education.length}</p>
-                      <p className="text-xs text-muted-foreground">Izglītība</p>
+                      <p className="text-xs text-muted-foreground">{t('education')}</p>
                     </div>
                     <div className="text-center">
                       <div className="flex items-center justify-center mb-1">
                         <Star className="w-4 h-4 text-muted-foreground" />
                       </div>
                       <p className="text-sm font-medium">{cv.skills.length}</p>
-                      <p className="text-xs text-muted-foreground">Prasmes</p>
+                      <p className="text-xs text-muted-foreground">{t('skills')}</p>
                     </div>
                     <div className="text-center">
                       <div className="flex items-center justify-center mb-1">
                         <Languages className="w-4 h-4 text-muted-foreground" />
                       </div>
                       <p className="text-sm font-medium">{cv.languageSkills.length}</p>
-                      <p className="text-xs text-muted-foreground">Valodas</p>
+                      <p className="text-xs text-muted-foreground">{t('languages')}</p>
                     </div>
                   </div>
 
                   {/* Last Updated */}
                   <div className="flex items-center text-sm text-muted-foreground mb-6">
                     <Calendar className="w-4 h-4 mr-2" />
-                    <span>Pēdējoreiz atjaunināts: {formatDate(cv.updatedAt)}</span>
+                    <span>{t('lastUpdated')}: {formatDate(cv.updatedAt)}</span>
                   </div>
 
                   {/* Action Buttons */}
@@ -255,7 +255,7 @@ export default function ProfilePage() {
                       className="flex-1 sm:flex-none"
                     >
                       <Eye className="w-4 h-4 mr-2" />
-                      Skatīt
+                      {t('view')}
                     </Button>
                     <Button 
                       variant="outline" 
@@ -264,7 +264,7 @@ export default function ProfilePage() {
                       className="flex-1 sm:flex-none"
                     >
                       <Edit className="w-4 h-4 mr-2" />
-                      Rediģēt
+                      {t('edit')}
                     </Button>
                     <Button 
                       variant="outline" 
@@ -272,7 +272,7 @@ export default function ProfilePage() {
                       className="flex-1 sm:flex-none"
                     >
                       <Download className="w-4 h-4 mr-2" />
-                      Lejupielādēt
+                      {t('download')}
                     </Button>
                     <Button 
                       variant="outline" 
@@ -281,7 +281,7 @@ export default function ProfilePage() {
                       className="flex-1 sm:flex-none text-red-600 hover:text-red-700 hover:bg-red-50"
                     >
                       <Trash2 className="w-4 h-4 mr-2" />
-                      Dzēst
+                      {t('delete')}
                     </Button>
                   </div>
                 </CardContent>
@@ -294,31 +294,31 @@ export default function ProfilePage() {
         {savedCVs.length > 0 && (
           <Card className="mt-8">
             <CardHeader>
-              <CardTitle className="text-lg">Kopsavilkums</CardTitle>
+              <CardTitle className="text-lg">{t('summary')}</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="text-center">
                   <p className="text-2xl font-bold text-primary">{savedCVs.length}</p>
-                  <p className="text-sm text-muted-foreground">Kopā CV</p>
+                  <p className="text-sm text-muted-foreground">{t('totalCVs')}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-green-600">
                     {savedCVs.filter(cv => cv.language === 'lv').length}
                   </p>
-                  <p className="text-sm text-muted-foreground">Latviešu valodā</p>
+                  <p className="text-sm text-muted-foreground">{t('inLatvian')}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-blue-600">
                     {savedCVs.filter(cv => cv.language === 'en').length}
                   </p>
-                  <p className="text-sm text-muted-foreground">Angļu valodā</p>
+                  <p className="text-sm text-muted-foreground">{t('inEnglish')}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-2xl font-bold text-purple-600">
                     {savedCVs.filter(cv => cv.language === 'ru').length}
                   </p>
-                  <p className="text-sm text-muted-foreground">Krievu valodā</p>
+                  <p className="text-sm text-muted-foreground">{t('inRussian')}</p>
                 </div>
               </div>
             </CardContent>
